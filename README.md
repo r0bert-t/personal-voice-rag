@@ -1,12 +1,12 @@
 # Personal Voice RAG agent
 
 - Supports spoken audio to interact with AI models with voice high accuracy, ultra-low latency and deep multilingual support 
-- Allows to perform fast semantic search over large sets of private documents in a local vector data base
-- Elminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external servers
+- Allows to perform fast semantic search over large sets of private documents in a local vector database
+- Eliminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external servers
 
 ![Python](https://img.shields.io/badge/Python-grey)
 ![Ollama](https://img.shields.io/badge/Ollama-orange)
-![Chroma](https://img.shields.io/badge/Ollama-yellow)
+![Chroma](https://img.shields.io/badge/Chroma-yellow)
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
 
@@ -15,7 +15,7 @@
 
 ## System Architecture
 
-Voice agent is using [Ollama](https://ollama.com/) as the core engine. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
+Personal voice agent is using [Ollama](https://ollama.com/) as the core engine. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
 ### LLM model
 Ollama hosts over 500 AI open-weight and [community models](https://ollama.com/library). Voice agent is using Llama 3.2 (3B) model.
@@ -40,7 +40,7 @@ Personal voice agent will be supporting following ElevenLabs APIs:
 
 ### Sample data flow
 1.	Agent records user voice query and converts it to text using ElevenLabs SST API
-2.  The agent uses an embedding model to search local vector store for relevant context (e.g.PDF files, text files)
+2.  The agent uses an embedding model to search local vector store for relevant context (e.g. PDF files, text files)
 2.  The retrieved query (in text format) and context is injected into the LLM prompt
 3.	Llama 3.2 model synthesizes an accurate answer based on provided data
 4.	The retrieved response is converted to audio using ElevenLabs TTS API
