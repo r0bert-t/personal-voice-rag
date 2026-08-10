@@ -40,7 +40,7 @@ Personal voice agent will be supporting following ElevenLabs APIs:
 
 ### Sample data flow
 1.	Agent records user voice query and converts it to text using ElevenLabs SST API
-2.  The agent uses an embedding model to search local vector store for relevant context (e.g. PDF files, text files)
+2.  The agent uses an embedding model to search local vector store for relevant context (e.g. PDF files)
 2.  The retrieved query (in text format) and context is injected into the LLM prompt
 3.	Llama 3.2 model synthesizes an accurate answer based on provided data
 4.	The retrieved response is converted to audio using ElevenLabs TTS API
@@ -50,7 +50,7 @@ Personal voice agent will be supporting following ElevenLabs APIs:
 ```bash
 # Clone repository
 git clone https://github.com/r0bert-t/personal-voice-rag.git
-cd simple-voice-rag
+cd personal-voice-rag
 
 # Create environment
 python3 -m venv venv
