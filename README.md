@@ -75,6 +75,10 @@ python personal-voice-rag.py
 | Llama 3.2(3b) | Free (local) |
 | ElevenLabsAPI | Free tier 10000 credits/month |
 
+## License
+
+MIT
+
 ---
 
 Created by [Robert Tracz](https://www.linkedin.com/in/robert-tracz/) 
