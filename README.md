@@ -9,6 +9,8 @@
 ![Chroma](https://img.shields.io/badge/Chroma-yellow)
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
+## Use-case:
+- Create 
 
 ![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag.png)
 
@@ -17,9 +19,18 @@
 
 Personal voice agent is using [Ollama](https://ollama.com/) as the core engine. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
+### Components
+- Ollama
+- ChromaDB
+- ElevenLabsAPI
+
 ### LLM model
 Ollama hosts over 500 AI open-weight and [community models](https://ollama.com/library). Voice agent is using Llama 3.2 (3B) model.
 - Llama 3.2 (3B) model balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
+
+### Embedding model 
+[nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window
+It converts text into dense numerical vectors that capture semantic meaning, making it useful for retrieval-augmented generation (RAG) and semantic search.
 
 ### Ollama setup
 ```bash
@@ -28,6 +39,9 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 # Install Llama3.2 LLM model
 ollama pull llama3.2:3b
+
+# Install nomic-embed-text model
+ollama pull nomic-embed-text
 
 # Run Llama3.2 LLM model
 ollama run llama3.2:3b
@@ -73,6 +87,7 @@ python personal-voice-rag.py
 | Ollama        | Free (local) |
 | ChromaDB      | Free (local) |
 | Llama 3.2(3b) | Free (local) |
+| nomic-embed-text | Free (local) |
 | ElevenLabsAPI | Free tier 10000 credits/month |
 
 ## License
