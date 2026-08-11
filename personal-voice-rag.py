@@ -203,8 +203,8 @@ def main():
         if flag_pdf_ingestion == 'y':
             pdf_file_ingestion()
         while True:
-            flag = input('\nProceed with voice question? [y/n] ').strip().lower()
-            if flag == 'y':
+            flag_query = input('\nProceed with voice question? [y/n] ').strip().lower()
+            if flag_query == 'y':
                 rag_chain_query()
             else:
                 break      
