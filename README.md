@@ -4,8 +4,10 @@
 - Allows to perform fast semantic search over large sets of private documents in a local vector database
 - Eliminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external servers
 
+___
 > **Use-cases:**
-> Personal assistant that can provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
+> Personal voice agent is able to provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
+> It can be used as a powerful AI assistant by connecting a LLMs to private documentation without needing to retrain the model.
 ___
 
 ![Python](https://img.shields.io/badge/Python-grey)
