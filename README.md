@@ -18,35 +18,16 @@ Personal assistant that can provide more accurate, context-aware answers by matc
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core engine. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
-
-### Components
-- Ollama
-- ChromaDB
-- ElevenLabsAPI
+Personal voice agent is using [Ollama](https://ollama.com/) as the core engine and Chroma vector database for storing user data. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
+Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings.
 
 ### LLM model
-Ollama hosts over 500 AI open-weight and [community models](https://ollama.com/library). Voice agent is using Llama 3.2 (3B) model.
-- Llama 3.2 (3B) model balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
+Personal voice agent is using Llama 3.2 (3B) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
 
 ### Embedding model 
-[nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window
+For embedding it was used a [nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window
 It converts text into dense numerical vectors that capture semantic meaning, making it useful for retrieval-augmented generation (RAG) and semantic search.
 
-### Ollama setup
-```bash
-# Install Ollama (Mac/Linux)
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Install Llama3.2 LLM model
-ollama pull llama3.2:3b
-
-# Install nomic-embed-text model
-ollama pull nomic-embed-text
-
-# Run Llama3.2 LLM model
-ollama run llama3.2:3b
-```
 ### Spoken audio support
 
 Personal voice agent will be supporting following ElevenLabs APIs:
@@ -63,6 +44,15 @@ Personal voice agent will be supporting following ElevenLabs APIs:
 
 ### Voice RAG setup
 ```bash
+# Install Ollama (Mac/Linux)
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Install Llama3.2 LLM model
+ollama pull llama3.2:3b
+
+# Install nomic-embed-text model
+ollama pull nomic-embed-text
+
 # Clone repository
 git clone https://github.com/r0bert-t/personal-voice-rag.git
 cd personal-voice-rag
