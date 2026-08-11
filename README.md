@@ -4,13 +4,14 @@
 - Allows to perform fast semantic search over large sets of private documents in a local vector database
 - Eliminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external servers
 
+> ## Use-cases
+> Personal assistant that can provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
+___
+
 ![Python](https://img.shields.io/badge/Python-grey)
 ![Ollama](https://img.shields.io/badge/Ollama-orange)
 ![Chroma](https://img.shields.io/badge/Chroma-yellow)
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
-
-## Use-cases
-Personal assistant that can provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
 
 
 ![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag.png)
@@ -18,11 +19,11 @@ Personal assistant that can provide more accurate, context-aware answers by matc
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core engine and Chroma vector database for storing user data. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
+Personal voice agent is using [Ollama](https://ollama.com/) as the core engine and [Chroma](https://www.trychroma.com/) vector database for storing user data. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings.
 
 ### LLM model
-Personal voice agent is using Llama 3.2 (3B) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
+For LLM is was used Llama 3.2 (3B) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
 
 ### Embedding model 
 For embedding it was used a [nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window
