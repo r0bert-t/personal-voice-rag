@@ -140,17 +140,23 @@ def pdf_file_ingestion():
     print('[ File already indexed in vector store? ]', is_file_already_indexed(vector_store, pdf_file))
 
 
-def rag_chain_query():
+def rag_chain_query(query_format):
     """ 
     Construct and execute the retrieval-QA chain query
     """
 
-    record_audio()
-    user_query_text = transcribe_audio()
+    if query_format == 'voice':
+        flag = input('\nProceed with voice question? [y/n] ').strip().lower()
+        if flag == 'y':
+            record_audio()
+            user_query_text = transcribe_audio()
 
-    if not user_query_text.strip():
-        print("No voice question")
-        return
+        if not user_query_text.strip():
+            print("No voice question")
+            return
+    elif query_format == 'text':
+        user_query_text = input('Provide question: ').strip()
+
 
     embeddings = OllamaEmbeddings(
         model="nomic-embed-text"
@@ -203,9 +209,9 @@ def main():
         if flag_pdf_ingestion == 'y':
             pdf_file_ingestion()
         while True:
-            flag_query = input('\nProceed with voice question? [y/n] ').strip().lower()
-            if flag_query == 'y':
-                rag_chain_query()
+            flag_query = input('\nProvide type of the question? [text/voice] ').strip().lower()
+            if flag_query == 'text' or flag_query == 'voice':
+                rag_chain_query(flag_query)
             else:
                 break      
     except KeyboardInterrupt:
