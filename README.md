@@ -92,7 +92,7 @@ python personal-voice-rag.py
 ## Privacy considerations 
 
 When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers Zero Retention Mode when most data in requests and responses are immediately deleted once the request is completed although it is limited only to enterprise customers.
-To keep communication privacy it is recommended to use text interface to interact with AI and allow route traffic through local-hosted and private LLM endpoints.
+When communication privacy is critical is recommended to use a text interface to interact with AI and allow route traffic through local-hosted and private LLM endpoints.
 
 ## Cost
 | Service       | Cost |
