@@ -9,8 +9,9 @@
 ![Chroma](https://img.shields.io/badge/Chroma-yellow)
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
-## Use-case:
-- Create 
+## Use-cases
+Personal assistant that can provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
+
 
 ![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag.png)
 
