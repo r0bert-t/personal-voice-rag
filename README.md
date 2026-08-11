@@ -27,14 +27,15 @@ Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engi
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
 ### LLM model
-For LLM is was used [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
+[Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model was used. It is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon, or dedicated graphics cards. It offers maximum context window of 128K tokens
+Of course it is possible to use other models available in [Ollama library](https://ollama.com/library) depending on the available hardware performance.
 
 ### Embedding model 
 For embedding it was used a [nomic-embed-text:v1.5](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
 It converts text into dense numerical vectors that capture semantic meaning and also allows to search local vector store for relevant context.
 
 ### Chroma database
-Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings.
+Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
 
 ### Spoken audio support
 
@@ -45,11 +46,11 @@ Personal voice agent is supporting following ElevenLabs APIs:
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 
 ### RAG chain query processing
-It is worth to outline a few important methods and functions used to process RAG chain query
-- LangChain function **as_retriever** converts a vector store into a retriever object (LangChain retriever interface). In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query
-- LangChain core method **ChatPromptTemplate.from_messages** is used to build structured multi-role chat prompts
-- LangChain **create_stuff_documents_chain** function builds a runnable sequence that "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model
-- LangChain **create_retrieval_chain** function combines a retriever and a document combination chain
+It is worth to outline a few important LangChain methods and functions used to process RAG chain queries
+- **as_retriever** function converts a vector store into a retriever object (LangChain retriever interface). In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query
+- **ChatPromptTemplate.from_messages** core method is used to build structured multi-role chat prompts
+- **create_stuff_documents_chain** function builds a runnable sequence that "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model
+- **create_retrieval_chain** function combines a retriever and a document combination chain
 
 ### Sample data flow (voice user query)
 1.	Agent records user voice query and converts it to text using ElevenLabs SST API
