@@ -28,8 +28,8 @@ Chroma database (ChromaDB) is an open-source vector store used for storing and r
 For LLM is was used [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
 
 ### Embedding model 
-For embedding it was used a [nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
-It converts text into dense numerical vectors that capture semantic meaning, making it useful for retrieval-augmented generation (RAG) and semantic search.
+For embedding it was used a [nomic-embed-text:v1.5](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
+It converts text into dense numerical vectors that capture semantic meaning and also allows to search local vector store for relevant context.
 
 ### Spoken audio support
 
@@ -37,9 +37,9 @@ Personal voice agent is supporting following ElevenLabs APIs:
 - **ElevenLabs Speech to Text (STT)** powered by the [Scribe v2](https://elevenlabs.io/speech-to-text) model, that converts spoken audio into highly accurate written text. It can handle complex audio environments (e.g. with background noise, overlapping speech).
 - **ElevenLabs Text-to-Speech (TTS)** that enables developers to generate lifelike, emotionally rich, and human-like speech from text in over 70 language. It features ultra-low latency and supports real-time audio streaming. In our text conversion to audio we will be using [Eleven v3](https://elevenlabs.io/v3) model which is most expressive AI voice model
 
-### Sample data flow
+### Sample data flow (voice user query)
 1.	Agent records user voice query and converts it to text using ElevenLabs SST API
-2.  The agent uses an embedding model to search local vector store for relevant context (e.g. PDF files)
+2.  The agent uses an embedding model to search local vector store for relevant context (e.g. indexed PDF files)
 2.  The retrieved query (in text format) and context is injected into the LLM prompt
 3.	Llama 3.2 model synthesizes an accurate answer based on provided data
 4.	The retrieved response is converted to audio using ElevenLabs TTS API
