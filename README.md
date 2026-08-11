@@ -21,7 +21,10 @@ ___
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain development framework](https://www.langchain.com/) that acts as a bridge between the AI model and data source and [Chroma](https://www.trychroma.com/) vector database for storing user data. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain development framework](https://www.langchain.com/) that acts as a bridge between the AI model and data sources. For storing user data it was used [Chroma](https://www.trychroma.com/) vector database . 
+
+### Ollama
+Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
 ### LLM model
 For LLM is was used [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
