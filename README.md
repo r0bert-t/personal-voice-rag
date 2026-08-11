@@ -7,7 +7,7 @@
 ___
 > **Use-cases:**
 > Personal voice agent is able to provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
-> It can be used as a powerful AI assistant by connecting a LLMs to private documentation without needing to retrain the model.
+> It can be used as a powerful AI assistant by connecting a LLMs to private documentation without a need to retrain the model.
 ___
 
 ![Python](https://img.shields.io/badge/Python-grey)
@@ -28,7 +28,7 @@ Chroma database (ChromaDB) is an open-source vector store used for storing and r
 For LLM is was used [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
 
 ### Embedding model 
-For embedding it was used a [nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window
+For embedding it was used a [nomic-embed-text](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
 It converts text into dense numerical vectors that capture semantic meaning, making it useful for retrieval-augmented generation (RAG) and semantic search.
 
 ### Spoken audio support
