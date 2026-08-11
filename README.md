@@ -37,7 +37,9 @@ Personal voice agent is supporting following ElevenLabs APIs:
 - **ElevenLabs Speech to Text (STT)** powered by the [Scribe v2](https://elevenlabs.io/speech-to-text) model, that converts spoken audio into highly accurate written text. It can handle complex audio environments (e.g. with background noise, overlapping speech).
 - **ElevenLabs Text-to-Speech (TTS)** that enables developers to generate lifelike, emotionally rich, and human-like speech from text in over 70 language. It features ultra-low latency and supports real-time audio streaming. In our text conversion to audio we will be using [Eleven v3](https://elevenlabs.io/v3) model which is most expressive AI voice model
 
-### RAG chain query 
+> Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
+
+### RAG chain query processing
 It is worth to outline a few important methods and functions used to process RAG chain query
 - LangChain function **as_retriever** converts a vector store into a retriever object (LangChain retriever interface). In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query
 - LangChain core method **ChatPromptTemplate.from_messages** is used to build structured multi-role chat prompts
