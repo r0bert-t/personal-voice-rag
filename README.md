@@ -21,8 +21,7 @@ ___
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core engine and [Chroma](https://www.trychroma.com/) vector database for storing user data. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
-Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings.
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain development framework](https://www.langchain.com/) that acts as a bridge between the AI model and data source and [Chroma](https://www.trychroma.com/) vector database for storing user data. Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
 ### LLM model
 For LLM is was used [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model that balances high-performance text generation with ultra-low hardware requirements and it is perfectly suited for hardware like personal computers. It offers maximum context window of 128K tokens
@@ -30,6 +29,9 @@ For LLM is was used [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) mod
 ### Embedding model 
 For embedding it was used a [nomic-embed-text:v1.5](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
 It converts text into dense numerical vectors that capture semantic meaning and also allows to search local vector store for relevant context.
+
+### Chroma database
+Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings.
 
 ### Spoken audio support
 
