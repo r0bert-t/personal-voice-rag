@@ -27,7 +27,7 @@ Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engi
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
 ### LLM model
-[Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) model was used. It is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon, or dedicated graphics cards. It offers maximum context window of 128K tokens
+[Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon, or dedicated graphics cards. It offers maximum context window of 128K tokens
 Of course it is possible to use other models available in [Ollama library](https://ollama.com/library) depending on the available hardware performance.
 
 ### Embedding model 
@@ -89,6 +89,10 @@ export ELEVENLABS_API_KEY="<KEY>”
 # Run code
 python personal-voice-rag.py
 ```
+## Privacy considerations 
+
+When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers Zero Retention Mode when most data in requests and responses are immediately deleted once the request is completed although it is limited only to enterprise customers.
+To keep communication privacy it is recommended to use text interface to interact with AI and allow route traffic through local-hosted and private LLM endpoints.
 
 ## Cost
 | Service       | Cost |
