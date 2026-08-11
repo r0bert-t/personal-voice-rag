@@ -1,0 +1,10 @@
+elevenlabs 
+sounddevice 
+scipy 
+numpy
+langchain 
+langchain-ollama 
+langchain-community
+langchain-classic
+pypdf 
+chromadb
