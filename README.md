@@ -21,13 +21,13 @@ ___
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain development framework](https://www.langchain.com/) that acts as a bridge between the AI model and data sources. For storing user data it was used [Chroma](https://www.trychroma.com/) vector database . 
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
 
 ### Ollama
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
 ### LLM model
-[Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon, or dedicated graphics cards. It offers maximum context window of 128K tokens
+Meta's [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon or dedicated graphics cards. It offers maximum context window of 128K tokens.
 Of course it is possible to use other models available in [Ollama library](https://ollama.com/library) depending on the available hardware performance.
 
 ### Embedding model 
@@ -91,8 +91,8 @@ python personal-voice-rag.py
 ```
 ## Privacy considerations 
 
-When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers Zero Retention Mode when most data in requests and responses are immediately deleted once the request is completed although it is limited only to enterprise customers.
-When communication privacy is critical is recommended to use a text interface to interact with AI and allow route traffic through local-hosted and private LLM endpoints.
+When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers Zero Retention Mode that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
+When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
 
 ## Cost
 | Service       | Cost |
