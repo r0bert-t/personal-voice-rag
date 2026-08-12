@@ -1,7 +1,7 @@
 """
 Personal Voice RAG agent
 
-Description: Allows to interact with AI models hosted on local Ollama using a speech and to perform fast semantic search
+Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 Version: 0.0.1
 """
