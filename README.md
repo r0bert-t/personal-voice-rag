@@ -41,7 +41,7 @@ Chroma database (ChromaDB) is an open-source vector store used for storing and r
 
 Personal voice agent is supporting following ElevenLabs APIs:
 - **ElevenLabs Speech to Text (STT)** powered by the [Scribe v2](https://elevenlabs.io/speech-to-text) model, that converts spoken audio into highly accurate written text. It can handle complex audio environments (e.g. with background noise, overlapping speech).
-- **ElevenLabs Text-to-Speech (TTS)** that enables developers to generate lifelike, emotionally rich, and human-like speech from text in over 70 language. It features ultra-low latency and supports real-time audio streaming. In our text conversion to audio we will be using [Eleven v3](https://elevenlabs.io/v3) model which is most expressive AI voice model
+- **ElevenLabs Text-to-Speech (TTS)** that enables to generate lifelike, emotionally rich, and human-like speech from text in over 70 language. It features ultra-low latency and supports real-time audio streaming. Personal voice agent was configured to use for text to audio conversion [Eleven v3](https://elevenlabs.io/v3) model which is most expressive ElevenLabs AI voice model
 
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 
