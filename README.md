@@ -46,11 +46,12 @@ Personal voice agent is supporting following ElevenLabs APIs:
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 
 ### RAG chain query processing
-It is worth to outline a few important LangChain methods and functions used to process RAG chain queries
-- **as_retriever** function converts a vector store into a retriever object (LangChain retriever interface). In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query
-- **ChatPromptTemplate.from_messages** core method is used to build structured multi-role chat prompts
-- **create_stuff_documents_chain** function builds a runnable sequence that "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model
-- **create_retrieval_chain** function combines a retriever and a document combination chain
+It is worth to outline a few important steps in processing RAG chain queries
+1. Converts a vector store into a retriever object (LangChain retriever interface) using **as_retriever** function. In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query
+2. Build a structured multi-role chat prompt using a core method **ChatPromptTemplate.from_messages**
+3. Build a runnable sequence using a **create_stuff_documents_chain** function that "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model.
+4. Combine a retriever and a document combination chain using a **create_retrieval_chain** function
+5. Execute a Retrieval-Augmented Generation (RAG) pipeline to the Large Language Model (LLM) and stream response in real-time
 
 ### Sample data flow (voice user query)
 1.	Agent records user voice query and converts it to text using ElevenLabs SST API
