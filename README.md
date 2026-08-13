@@ -46,8 +46,8 @@ Personal voice agent is supporting following ElevenLabs APIs:
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 
 ### RAG chain pipeline
-It is worth to outline a few important steps in processing RAG chain queries
-1. Converts a vector store into a retriever object (LangChain retriever interface) using **as_retriever** function. In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query.
+It is worth to outline a few important steps in processing RAG chain and user queries
+1. Convert a vector store into a retriever object (LangChain retriever interface) using **as_retriever** function. In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query.
 2. Build a structured multi-role chat prompt using a LangChain core method **ChatPromptTemplate.from_messages**.
 It was used following system prompt that instructs the model what to do
 ```
@@ -57,7 +57,7 @@ It was used following system prompt that instructs the model what to do
         "If you don't know the answer, check the LLM model.
    )
 ```
-3. Build a runnable sequence using a **create_stuff_documents_chain** function that "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model.
+3. Build a runnable sequence using a **create_stuff_documents_chain** function. This fucntion "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model.
 4. Combine a retriever and a document combination chain using a **create_retrieval_chain** function
 5. Execute a Retrieval-Augmented Generation (RAG) pipeline to the Large Language Model (LLM) and stream response in real-time
 
@@ -100,7 +100,7 @@ python personal-voice-rag.py
 ```
 ## Privacy considerations 
 
-When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers Zero Retention Mode that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
+When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
 When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
 
 ## Cost
