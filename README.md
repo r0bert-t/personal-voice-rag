@@ -49,7 +49,7 @@ Personal voice agent is supporting following ElevenLabs APIs:
 It is worth to outline a few important steps in processing RAG chain and user queries
 1. Convert a vector store into a retriever object (LangChain retriever interface) using **as_retriever** function. In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query.
 2. Build a structured multi-role chat prompt using a LangChain core method **ChatPromptTemplate.from_messages**.
-It was used following system prompt that instructs the model what to do
+In code we are using following system prompt that instructs the model what to do:
 ```
   system_prompt = (
         "You are an assistant for question-answering tasks.\n"
