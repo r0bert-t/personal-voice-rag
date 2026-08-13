@@ -50,7 +50,7 @@ It is worth to outline a few important steps in processing RAG chain queries
 1. Converts a vector store into a retriever object (LangChain retriever interface) using **as_retriever** function. In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query
 2. Build a structured multi-role chat prompt using a core method **ChatPromptTemplate.from_messages**
 In the voice agent it was used following system prompt. It instructs the model what to do.
-```python
+```
   system_prompt = (
         "You are an assistant for question-answering tasks.\n"
         "Use the following pieces of retrieved context to answer the question.\n"
