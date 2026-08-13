@@ -59,7 +59,7 @@ In code we are using following system prompt that instructs the model what to do
 ```
 3. Build a runnable sequence using a **create_stuff_documents_chain** function. This fucntion "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model.
 4. Combine a retriever and a document combination chain using a **create_retrieval_chain** function
-5. Execute a Retrieval-Augmented Generation (RAG) pipeline to the Large Language Model (LLM) and stream response in real-time
+5. Execute a RAG pipeline to the Large Language Model (LLM) and stream response in real-time to user
 
 ### Sample data flow (voice user query)
 1.	Agent records user voice query and converts it to text using ElevenLabs SST API
