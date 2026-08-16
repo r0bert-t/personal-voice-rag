@@ -3,6 +3,7 @@ Personal Voice RAG agent
 
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
+
 Version: 0.0.1
 """
 
@@ -26,7 +27,7 @@ import datetime
 
 
 ELEVENLABS_API_KEY = "<KEY>"
-SAMPLE_RATE = 16000
+SAMPLE_RATE = 48000
 FILENAME = "input.wav"
 
 
@@ -197,7 +198,7 @@ def rag_chain_query(query_format):
     print("\n")
     
     # Convert response to audio
-    convert_to_audio(response_text)
+    convert_to_audio(response_text['answer'])
     
     # Remove temporary file
     if os.path.exists(FILENAME):
