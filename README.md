@@ -6,7 +6,7 @@
 
 ___
 > **Use-cases:**
-> Personal voice agent is able to provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database (semantic search).
+> Personal voice agent is able to provide more accurate, context-aware answers by matching a user's query to information stored in a local vector database ([semantic search](https://en.wikipedia.org/wiki/Semantic_search)).
 > It can be used as a powerful AI assistant by connecting a LLMs to private documentation without a need to retrain the model.
 ___
 
@@ -84,8 +84,8 @@ ollama pull nomic-embed-text
 git clone https://github.com/r0bert-t/personal-voice-rag.git
 cd personal-voice-rag
 
-# Create environment
-python3 -m venv venv
+# Create virtual environment
+python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
