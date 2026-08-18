@@ -74,7 +74,7 @@ In code we are using following system prompt that instructs the model what to do
 
 ### Voice RAG setup
 ```bash
-# Install Ollama (Mac/Linux)
+# Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Install Llama3.2 LLM model
@@ -83,7 +83,7 @@ ollama pull llama3.2:3b
 # Install nomic-embed-text model
 ollama pull nomic-embed-text
 
-# Clone repository
+# Clone repository 
 git clone https://github.com/r0bert-t/personal-voice-rag.git
 cd personal-voice-rag
 
