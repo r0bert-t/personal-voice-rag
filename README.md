@@ -21,7 +21,7 @@ ___
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources and [Gradio](https://gradio.app/) to provide a Web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
 
 ### Gradio
 Gradio is an open-source Python package that allows to quickly access the personal voice agent using a web interface.
