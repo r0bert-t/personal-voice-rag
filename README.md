@@ -101,10 +101,9 @@ python personal-voice-rag.py
 # Open in web browser following link to access UI
 http://localhost:7860
 ```
-## Sample screenshot
+## Sample screenshots
 
-Example of processing voice questions:
-![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_01.jpg)
+Example of processing voice question
 ![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_02.jpg)
 
 ## Privacy considerations 
