@@ -23,6 +23,9 @@ ___
 
 Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
 
+### Gradio
+Gradio is an open-source Python package that allows to quickly access the personal voice agent using a web interface.
+
 ### Ollama
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
@@ -89,14 +92,14 @@ python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Install libportaudio
-sudo apt install libportaudio
-
 # Update ElevenLabs API key
 export ELEVENLABS_API_KEY="<KEY>”
 
 # Run code
 python personal-voice-rag.py
+
+# Open in web browser following link to access UI
+http://localhost:7860
 ```
 ## Privacy considerations 
 
