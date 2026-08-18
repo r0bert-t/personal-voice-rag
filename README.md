@@ -103,7 +103,7 @@ http://localhost:7860
 ```
 ## Sample screenshot
 
-![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal_voice_agent_UI_01.jpg)
+![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_01.jpg)
 
 ## Privacy considerations 
 
