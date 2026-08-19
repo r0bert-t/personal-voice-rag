@@ -23,13 +23,15 @@ import gradio as gr
 
 ELEVENLABS_API_KEY = "<KEY>"
 voice_response = False
+gradio_public_endpoint = False
+
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
 
 def toggle_voice_var(value):
     """
-    Function responsible to update voice response variable
+    Update global voice response variable
     """
     global voice_response
     print(f"[ Updating voice response variable to {value} ]")
@@ -79,7 +81,10 @@ def run_gradio_ui():
         submit_btn_audio.click(fn=transcribe_audio,inputs=[audio_input],outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
         submit_btn_pdf.click(fn=pdf_file_ingestion,inputs=[pdf_file],outputs=pdf_response)
                 
-    app.launch() # share=True
+    if gradio_public_endpoint:
+        app.launch(share=True)
+    else:
+        app.launch()
 
 def transcribe_audio(audio_path):
     """ 
