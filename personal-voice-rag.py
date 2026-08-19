@@ -1,7 +1,9 @@
 """
 Personal Voice RAG agent
+
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
+
 Version: 0.0.2
 """
 
@@ -26,11 +28,17 @@ client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
 
 def toggle_voice_var(value):
+    """
+    Function responsible to update voice response variable
+    """
     global voice_response
     print(f"[ Updating voice response variable to {value} ]")
     voice_response = value
 
 def run_gradio_ui():
+    """
+    Gradio UI
+    """
     with gr.Blocks(title="Personal Voice RAG") as app:
         gr.Markdown("""
         # Personal Voice RAG agent
@@ -45,7 +53,6 @@ def run_gradio_ui():
                 checkbox = gr.Checkbox(label="Provide voice response", value=voice_response)
                 checkbox.change(fn=toggle_voice_var, inputs=checkbox, outputs="")
                 submit_btn_audio = gr.Button("Get answer")
-
             with gr.Column():
                 audio_output = gr.Textbox(
                     label="What I heard",
@@ -55,7 +62,6 @@ def run_gradio_ui():
                     label="Response",
                     interactive=False
                 )
-
             with gr.Column():
                 pdf_file = gr.File(label="Upload a PDF file")
                 submit_btn_pdf = gr.Button("Upload file")
@@ -63,16 +69,13 @@ def run_gradio_ui():
                     label="Response",
                     interactive=False
                 )
-
         with gr.Row():
-
             with gr.Column():
                 chatb = gr.ChatInterface(
                     fn=rag_chain_query,
                     title="Chat",
                     description="Ask me"
                 )
-
         submit_btn_audio.click(fn=transcribe_audio,inputs=[audio_input],outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
         submit_btn_pdf.click(fn=pdf_file_ingestion,inputs=[pdf_file],outputs=pdf_response)
                 
@@ -160,7 +163,7 @@ def pdf_file_ingestion(file):
     print('[ File already indexed in vector store? ]', resp)
 
     if resp:
-        return 'File success ingested'
+        return 'File successfully ingested'
     else:
         return 'Something went wrong'
     
