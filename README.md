@@ -107,7 +107,7 @@ Example of processing a voice question
 ![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_01.jpg)
 
 Example of processing a text question
-![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_01.jpg)
+![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_02.jpg)
 
 ## Privacy considerations 
 
