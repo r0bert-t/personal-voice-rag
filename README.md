@@ -92,8 +92,11 @@ python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Update ElevenLabs API key
-export ELEVENLABS_API_KEY="<KEY>”
+# Update in code ElevenLabs API key
+ELEVENLABS_API_KEY=<KEY>
+
+# (optional) If you want to expose your UI using a Gradio public endpoint set in code this variable to 'True'
+gradio_public_endpoint = True
 
 # Run code
 python personal-voice-rag.py
