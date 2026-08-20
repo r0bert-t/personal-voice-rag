@@ -116,7 +116,7 @@ Example of processing a text question
 
 - When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
 When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
-- When you enable public endpoint via gradio_public_endpoint = True this exposes your interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through external tunnel and Internet, meaning third parties could log or intercept inputs and outputs.
+- When public endpoint is enabled (via gradio_public_endpoint = True) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through external tunnel and Internet, meaning third parties could log or intercept inputs and outputs.
 
 ## Cost
 | Service       | Cost |
