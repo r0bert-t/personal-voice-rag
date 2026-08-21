@@ -98,7 +98,7 @@ brew install ffmpeg
 # Install FFMPEG (Linux)
 sudo apt install ffmpeg
 
-# Update in code ElevenLabs API key
+# Update in code ElevenLabs API key. You can generate API key at (ElevenLabs Platform)[https://elevenlabs.io/app/settings/api-keys]
 ELEVENLABS_API_KEY=<KEY>
 
 # (optional) If you want to expose your UI using a Gradio public endpoint set in code this variable to 'True'
