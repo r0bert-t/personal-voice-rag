@@ -92,6 +92,12 @@ python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
+# Install FFMPEG (Mac)
+brew install ffmpeg
+
+# Install FFMPEG (Linux)
+sudo apt install ffmpeg
+
 # Update in code ElevenLabs API key
 ELEVENLABS_API_KEY=<KEY>
 
