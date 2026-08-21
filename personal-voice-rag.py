@@ -198,7 +198,7 @@ def rag_chain_query(user_query_text, null):
     system_prompt = (
         "You are an assistant for question-answering tasks.\n"
         "Use the following pieces of retrieved context to answer the question.\n"
-        "If you don't know the answer, check the LLM model.\n\n"
+        "If you don't know the answer, use your internal knowledge.\n\n"
         "Context:\n{context}"
     )
     prompt = ChatPromptTemplate.from_messages([

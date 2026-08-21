@@ -57,7 +57,7 @@ In code we are using following system prompt that instructs the model what to do
   system_prompt = (
         "You are an assistant for question-answering tasks.\n"
         "Use the following pieces of retrieved context to answer the question.\n"
-        "If you don't know the answer, check the LLM model.
+        "If you don't know the answer, use your internal knowledge.
    )
 ```
 3. Build a runnable sequence using a **create_stuff_documents_chain** function. This fucntion "stuffs" a list of retrieved documents into a single prompt context window, formats them, and sends them to a large language model.
