@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.2 - 18-08-2026
+## v0.0.2 - 21-08-2026
 
 ### Added or Changed
 - added Gradio UI support
