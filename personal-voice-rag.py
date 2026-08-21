@@ -4,17 +4,11 @@ Personal Voice RAG agent
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 
-Version: 0.0.1
+Version: 0.0.2
 """
 
-import os
-import queue
-import sys
-import numpy as np
-import sounddevice as sd
 from elevenlabs.client import ElevenLabs
 from elevenlabs.play import play
-from scipy.io.wavfile import write
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings, ChatOllama
@@ -24,54 +18,87 @@ from langchain_classic.chains.combine_documents import create_stuff_documents_ch
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
 import datetime
+import gradio as gr
 
 
 ELEVENLABS_API_KEY = "<KEY>"
-SAMPLE_RATE = 48000
-FILENAME = "input.wav"
+voice_response = False
+gradio_public_endpoint = False
 
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
-def record_audio():
-    """ 
-    Audio recording 
+
+def toggle_voice_var(value):
     """
+    Update global voice response variable
+    """
+    global voice_response
+    print(f"[ Updating voice response variable to {value} ]")
+    voice_response = value
 
-    q = queue.Queue()
+def run_gradio_ui():
+    """
+    Gradio UI
+    """
+    with gr.Blocks(title="Personal Voice RAG") as app:
+        gr.Markdown("""
+        # Personal Voice RAG agent
+        """)
+        with gr.Row():
+            with gr.Column(scale=1):
+                audio_input = gr.Audio(
+                    sources=["microphone", "upload"],
+                    type="filepath",
+                    label="Record question"
+                )
+                checkbox = gr.Checkbox(label="Provide voice response", value=voice_response)
+                checkbox.change(fn=toggle_voice_var, inputs=checkbox, outputs="")
+                submit_btn_audio = gr.Button("Get answer")
+            with gr.Column():
+                audio_output = gr.Textbox(
+                    label="What I heard",
+                    interactive=False
+                )
+                audio_response = gr.Textbox(
+                    label="Response",
+                    interactive=False
+                )
+            with gr.Column():
+                pdf_file = gr.File(label="Upload a PDF file")
+                submit_btn_pdf = gr.Button("Upload file")
+                pdf_response = gr.Textbox(
+                    label="Response",
+                    interactive=False
+                )
+        with gr.Row():
+            with gr.Column():
+                chatb = gr.ChatInterface(
+                    fn=rag_chain_query,
+                    title="Chat",
+                    description="Ask me"
+                )
+        submit_btn_audio.click(fn=transcribe_audio,inputs=[audio_input],outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
+        submit_btn_pdf.click(fn=pdf_file_ingestion,inputs=[pdf_file],outputs=pdf_response)
+                
+    if gradio_public_endpoint:
+        app.launch(share=True)
+    else:
+        app.launch()
 
-    def callback(indata, frames, time, status):
-        if status:
-            print(status, file=sys.stderr)
-        q.put(indata.copy())
-
-    print("\n[Speak] Press ENTER to end recording", end="", flush=True)
-    
-    stream = sd.InputStream(samplerate=SAMPLE_RATE, channels=1, callback=callback)
-    with stream:
-        input()
-
-    # Audio data collection
-    audio_data = []
-    while not q.empty():
-        audio_data.append(q.get())
-    
-    audio_np = np.concatenate(audio_data, axis=0)
-    write(FILENAME, SAMPLE_RATE, audio_np)
-    print("[Voice recorded]")
-
-def transcribe_audio():
+def transcribe_audio(audio_path):
     """ 
     ElevenLabs speech-to-text 
     """
 
     print("[Transcription] ", end="", flush=True)
-    with open(FILENAME, "rb") as audio_file:
+    with open(audio_path, "rb") as audio_file:
         transcription = client.speech_to_text.convert(
             file=audio_file,
             model_id="scribe_v2",
         )
     print(f"Audio transcription: {transcription.text}")
+
     return transcription.text
 
 def convert_to_audio(text):
@@ -79,7 +106,7 @@ def convert_to_audio(text):
     ElevenLabs text-to-speech 
     """
 
-    print("[Voice response generation]")
+    print("[ Voice response generation ]")
 
     audio_stream = client.text_to_speech.convert(
         text=text,
@@ -102,14 +129,14 @@ def is_file_already_indexed(vector_store, file_name):
     return len(existing_doc['ids']) > 0
 
 
-def pdf_file_ingestion():
+def pdf_file_ingestion(file):
     """ 
     Ingest PDF file data into vector database
     """
 
     # Load the PDF document
     print("[ Loading PDF ]")
-    pdf_file = input('Provide file name: ')
+    pdf_file = file
     loader = PyPDFLoader(pdf_file)
     docs = loader.load()
 
@@ -120,7 +147,6 @@ def pdf_file_ingestion():
         chunk_overlap=200    # Overlap to prevent losing context between chunks
     )
     chunks = text_splitter.split_documents(docs)
-    #print(chunks)
 
     # Initialize local Ollama Embeddings
     print('[ Initializing local embeddings ]')
@@ -138,26 +164,23 @@ def pdf_file_ingestion():
     )
 
     # Check if file is already indexed in Chroma database
-    print('[ File already indexed in vector store? ]', is_file_already_indexed(vector_store, pdf_file))
+    resp=is_file_already_indexed(vector_store, pdf_file)
+    print('[ File already indexed in vector store? ]', resp)
 
+    if resp:
+        return 'File successfully ingested'
+    else:
+        return 'Something went wrong'
+    
 
-def rag_chain_query(query_format):
+def rag_chain_query(user_query_text, null):
     """ 
     Construct and execute the retrieval-QA chain query
     """
 
-    if query_format == 'voice':
-        flag = input('\nProceed with voice question? [y/n] ').strip().lower()
-        if flag == 'y':
-            record_audio()
-            user_query_text = transcribe_audio()
-
-        if not user_query_text.strip():
-            print("No voice question")
-            return
-    elif query_format == 'text':
-        user_query_text = input('Provide question: ').strip()
-
+    if not user_query_text.strip():
+        print("No voice question")
+        return
 
     embeddings = OllamaEmbeddings(
         model="nomic-embed-text"
@@ -191,32 +214,27 @@ def rag_chain_query(query_format):
 
     response_text = ''
 
-    print("\n[Processing query]")
+    print("\n[ Processing query ]")
     for chunk in response:
         print(chunk.get("answer",""), end="", flush=True)
-        response_text += chunk
+        if isinstance(chunk, dict) and "answer" in chunk:
+            response_text += chunk["answer"]
+            yield response_text
     print("\n")
     
-    # Convert response to audio
-    convert_to_audio(response_text['answer'])
-    
-    # Remove temporary file
-    if os.path.exists(FILENAME):
-        os.remove(FILENAME)
+    if voice_response:
+        print("[ Converting response to audio ]")
+        convert_to_audio(response_text)
+    else:
+        print("[ No conversion to audio ]")
+
 
 def main():
     try:
-        flag_pdf_ingestion = input('\nDo you want to ingest PDF file? [y/n] ').strip().lower()
-        if flag_pdf_ingestion == 'y':
-            pdf_file_ingestion()
-        while True:
-            flag_query = input('\nProvide type of the question? [text/voice] ').strip().lower()
-            if flag_query == 'text' or flag_query == 'voice':
-                rag_chain_query(flag_query)
-            else:
-                break      
-    except KeyboardInterrupt:
-        print("\nSession has been ended")
+        # Run gradio UI
+        run_gradio_ui()
+    except:
+        print("\nSomething went wrong")
 
 if __name__ == "__main__":
     main()

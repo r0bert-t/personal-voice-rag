@@ -21,7 +21,10 @@ ___
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources and [Gradio](https://gradio.app/) to provide a web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
+
+### Gradio
+Gradio is an open-source Python package that allows to quickly access the personal voice agent using a web interface.
 
 ### Ollama
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
@@ -71,7 +74,7 @@ In code we are using following system prompt that instructs the model what to do
 
 ### Voice RAG setup
 ```bash
-# Install Ollama (Mac/Linux)
+# Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Install Llama3.2 LLM model
@@ -80,7 +83,7 @@ ollama pull llama3.2:3b
 # Install nomic-embed-text model
 ollama pull nomic-embed-text
 
-# Clone repository
+# Clone repository 
 git clone https://github.com/r0bert-t/personal-voice-rag.git
 cd personal-voice-rag
 
@@ -89,19 +92,31 @@ python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Install libportaudio
-sudo apt install libportaudio
+# Update in code ElevenLabs API key
+ELEVENLABS_API_KEY=<KEY>
 
-# Update ElevenLabs API key
-export ELEVENLABS_API_KEY="<KEY>”
+# (optional) If you want to expose your UI using a Gradio public endpoint set in code this variable to 'True'
+gradio_public_endpoint = True
 
 # Run code
 python personal-voice-rag.py
+
+# Open in web browser following link to access UI
+http://localhost:7860
 ```
+## Sample screenshots
+
+Example of processing a voice question
+![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_01.jpg)
+
+Example of processing a text question
+![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_02.jpg)
+
 ## Privacy considerations 
 
-When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
+- When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
 When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
+- When Gradio public endpoint is enabled (via gradio_public_endpoint = True) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through Internet and external tunnel, meaning third parties could log or intercept inputs and outputs.
 
 ## Cost
 | Service       | Cost |
