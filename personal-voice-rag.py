@@ -26,7 +26,7 @@ import threading
 ELEVENLABS_API_KEY = "<KEY>"
 voice_response = False
 gradio_public_endpoint = False
-mcp_server = True
+mcp_server = False
 
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)

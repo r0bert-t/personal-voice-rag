@@ -31,11 +31,11 @@ Gradio is an open-source Python package that allows to quickly access the person
 ### Ollama
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
-### LLM model
+#### LLM model
 Meta's [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon or dedicated graphics cards. It offers maximum context window of 128K tokens.
 Of course it is possible to use other models available in [Ollama library](https://ollama.com/library) depending on the available hardware performance.
 
-### Embedding model 
+#### Embedding model 
 For embedding it was used a [nomic-embed-text:v1.5](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
 It converts text into dense numerical vectors that capture semantic meaning and also allows to search local vector store for relevant context.
 
@@ -110,6 +110,9 @@ ELEVENLABS_API_KEY=<KEY>
 # (optional) If you want to expose your UI using a Gradio public endpoint set in code this variable to 'True'
 gradio_public_endpoint = True
 
+# (optional) If you want to expose RAG query engine to external AI clients set in code this variable to 'True'
+mcp_server = True
+
 # Run code
 python personal-voice-rag.py
 
@@ -127,9 +130,10 @@ Example of processing a text question
 ## MCP support
 
 Personal voice agent features support for the Model Context Protocol (MCP) acting as a MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
-It exposes RAG query engine to external AI clients and allows them to search over indexed documents in a vector database
+It provides functionality to expose RAG query engine to external AI clients and allows them to search over indexed documents in a vector database.
 
-You can seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
+It is possible to seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude client gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
+> Please note that Claude Desktop is processing your data on external servers rather than locally and retrieved text chunks from local RAG and chat prompts are transmitted to Anthropic's cloud servers.
 
 ### Claude Desktop setup
 Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration:
