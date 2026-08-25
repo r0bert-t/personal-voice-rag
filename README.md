@@ -17,7 +17,7 @@ ___
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
 
-![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag.png)
+![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag_v2.png)
 
 
 ## System Architecture
