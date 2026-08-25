@@ -4,7 +4,7 @@ Personal Voice RAG agent
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 
-Version: 0.0.2
+Version: 0.0.3
 """
 
 from elevenlabs.client import ElevenLabs
@@ -19,15 +19,23 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
 import datetime
 import gradio as gr
+from fastmcp import FastMCP
+import threading
 
 
 ELEVENLABS_API_KEY = "<KEY>"
 voice_response = False
 gradio_public_endpoint = False
+mcp_server = True
 
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+mcp = FastMCP("MCP server")
 
+
+def mcp_server_run():
+    print("Running MCP server")
+    mcp.run()
 
 def toggle_voice_var(value):
     """
@@ -171,7 +179,49 @@ def pdf_file_ingestion(file):
         return 'File successfully ingested'
     else:
         return 'Something went wrong'
+
+@mcp.tool()
+def query_knowledge_database(query: str):
+    """
+    Use this tool to perform a semantic similarity search againts the local vector database
+    """
+
+    embeddings = OllamaEmbeddings(
+        model="nomic-embed-text"
+    )
     
+    vector_store = Chroma(
+        embedding_function=embeddings,
+        persist_directory="./chroma_db"
+    )
+    
+    retriever = vector_store.as_retriever(search_kwargs={"k": 3})  # Fetch top 3 chunks
+    llm = ChatOllama(model="llama3.2:3b", temperature=0)
+    
+    # Create the RAG prompt template
+    system_prompt = (
+        "You are an assistant for question-answering tasks.\n"
+        "Use the following pieces of retrieved context to answer the question.\n"
+        "If you don't know the answer, use your internal knowledge.\n\n"
+        "Context:\n{context}"
+    )
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ])
+    
+    # Build and execute the retrieval-QA chain
+    question_answer_chain = create_stuff_documents_chain(llm, prompt)
+    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
+    response = rag_chain.invoke({"input": query})
+
+    if isinstance(response, dict):
+        response_text = response.get("answer", response.get("result", str(response)))
+    else:
+        response_text = str(response)
+
+    return f"search results: {response_text}"  
 
 def rag_chain_query(user_query_text, null):
     """ 
@@ -231,6 +281,10 @@ def rag_chain_query(user_query_text, null):
 
 def main():
     try:
+        # Run MCP server
+        if mcp_server:
+            bg_thread = threading.Thread(target=mcp_server_run, daemon=True)
+            bg_thread.start()
         # Run gradio UI
         run_gradio_ui()
     except:
