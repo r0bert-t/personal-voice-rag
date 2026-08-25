@@ -23,6 +23,7 @@ ___
 ## System Architecture
 
 Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources and [Gradio](https://gradio.app/) to provide a web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
+MCP server using a [FastMCP](https://gofastmcp.com/getting-started/welcome) allows to expose RAG query pipeline to external AI clients.
 
 ### Gradio
 Gradio is an open-source Python package that allows to quickly access the personal voice agent using a web interface.
@@ -40,6 +41,9 @@ It converts text into dense numerical vectors that capture semantic meaning and 
 
 ### Chroma database
 Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
+
+### MCP server
+FastMCP is a full framework for building Model Context Protocol (MCP) applications. It t exposes Python functions as MCP tools, allows to connect to local or remote MCP servers, and return interactive interfaces directly from tools.
 
 ### Spoken audio support
 
@@ -123,7 +127,7 @@ Example of processing a text question
 ## MCP support
 
 Personal voice agent features support for the Model Context Protocol (MCP) acting as MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
-It exposes RAG query pipeline and allows external AI clients to search over indexed documents in a vector database
+It exposes RAG query pipeline to external AI clients and allows them to search over indexed documents in a vector database
 
 You can seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
 
