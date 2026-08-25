@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.3 - 25-08-2026
+
+### Added or Changed
+- added MCP support
+
 ## v0.0.2 - 21-08-2026
 
 ### Added or Changed

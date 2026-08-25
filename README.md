@@ -14,15 +14,16 @@ ___
 ![Python](https://img.shields.io/badge/Python-grey)
 ![Ollama](https://img.shields.io/badge/Ollama-orange)
 ![Chroma](https://img.shields.io/badge/Chroma-yellow)
+![FastMCP](https://img.shields.io/badge/FastMCP-green)
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
 
-![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag.png)
+![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/feature/mcp-server/docs/personal-voice-rag_v2.png)
 
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources and [Gradio](https://gradio.app/) to provide a web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources, [FastMCP](https://gofastmcp.com/getting-started/welcome) framework that allows to expose RAG search engine to external AI clients and [Gradio](https://gradio.app/) to provide a web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database .
 
 ### Gradio
 Gradio is an open-source Python package that allows to quickly access the personal voice agent using a web interface.
@@ -30,16 +31,19 @@ Gradio is an open-source Python package that allows to quickly access the person
 ### Ollama
 Ollama is a free, open-source software platform that allows you to run, manage, and deploy large language models directly on local computer.
 
-### LLM model
+#### LLM model
 Meta's [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon or dedicated graphics cards. It offers maximum context window of 128K tokens.
 Of course it is possible to use other models available in [Ollama library](https://ollama.com/library) depending on the available hardware performance.
 
-### Embedding model 
+#### Embedding model 
 For embedding it was used a [nomic-embed-text:v1.5](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
 It converts text into dense numerical vectors that capture semantic meaning and also allows to search local vector store for relevant context.
 
 ### Chroma database
 Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
+
+### MCP server
+FastMCP is a full framework for building Model Context Protocol (MCP) applications. It exposes Python functions as MCP tools, allows to run a local MCP server and return interactive interfaces directly from tools.
 
 ### Spoken audio support
 
@@ -106,6 +110,9 @@ ELEVENLABS_API_KEY=<KEY>
 # (optional) If you want to expose your UI using a Gradio public endpoint set in code this variable to 'True'
 gradio_public_endpoint = True
 
+# (optional) If you want to expose RAG query engine to external AI clients set in code this variable to 'True'
+mcp_server = True
+
 # Run code
 python personal-voice-rag.py
 
@@ -120,20 +127,56 @@ Example of processing a voice question
 Example of processing a text question
 ![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_02.jpg)
 
+## MCP support
+
+Personal voice agent features support for the Model Context Protocol (MCP) acting as a MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
+It provides functionality to expose RAG query engine to external AI clients and allows them to search over indexed documents in a vector database.
+
+### Claude Desktop integration
+
+It is possible to seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude client gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
+> Please note that Claude Desktop is processing your data on external servers rather than locally and retrieved text chunks from local RAG and chat prompts are transmitted to Anthropic's cloud servers.
+
+**Instruction**
+Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration:
+
+**Config file location:**
+```
+Windows: %APPDATA%\Claude\claude_desktop_config.json  
+Linux: ~/.config/Claude/claude_desktop_config.json
+MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+```
+
+**MCP server configuration:**
+```json
+{
+  "mcpServers": {
+    "personal-voice-rag": {
+      "command": "/path/to/your/project/venv/bin/python3.12",
+      "args": [
+        "/path/to/your/personal-voice-rag.py"
+      ]
+    }
+  }
+}
+```
+
 ## Privacy considerations 
 
 - When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
 When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
-- When Gradio public endpoint is enabled (via gradio_public_endpoint = True) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through Internet and external tunnel, meaning third parties could log or intercept inputs and outputs.
+- When Gradio public endpoint is enabled (via _gradio_public_endpoint = True_) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through Internet and external tunnel, meaning third parties could log or intercept inputs and outputs.
+- When using personal voice agent over Claude Desktop means local documents and vector database remain on the machine during search and indexing, but retrieved text chunks and chat prompts are transmitted to Anthropic's cloud servers.
 
 ## Cost
-| Service       | Cost |
-|---------------|------|
-| Ollama        | Free (local) |
-| ChromaDB      | Free (local) |
-| Llama 3.2(3b) | Free (local) |
+| Service          | Cost |
+|------------------|------|
+| Ollama           | Free (local) |
+| ChromaDB         | Free (local) |
+| Llama 3.2(3b)    | Free (local) |
 | nomic-embed-text | Free (local) |
-| ElevenLabsAPI | Free tier 10000 credits/month |
+| FastMCP          | Free (local) |
+| ElevenLabsAPI    | Free tier 10000 credits/month |
 
 ## License
 
