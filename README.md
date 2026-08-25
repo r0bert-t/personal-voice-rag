@@ -127,13 +127,16 @@ It exposes RAG query pipeline and allows external AI clients to search over inde
 
 You can seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
 
-Edit Claude Desktop configuration and add following MCP server configuration:
+Update your Claude Desktop configuration **claude_desktop_config.json** by add following MCP server configuration:
+
+Configuration locations:
 ```
 Windows: %APPDATA%\Claude\claude_desktop_config.json  
 Linux: ~/.config/Claude/claude_desktop_config.json
 MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
+MCP server configuration:
 ```json
 {
   "mcpServers": {
