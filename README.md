@@ -122,10 +122,16 @@ Example of processing a text question
 
 ## MCP support
 
-Personal voice agent features full support for the Model Context Protocol (MCP) acting as MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
-It exposes RAG query pipeline and indexed documents in vector database to external AI clients.
+Personal voice agent features support for the Model Context Protocol (MCP) acting as MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
+It exposes RAG query pipeline and allows external AI clients to search over indexed documents in a vector database
 
-You can seamlessly integrate personal voice agent with Claude Desktop. By adding to your Claude Desktop configuration file, Claude gains the ability to query your local RAG system, retrieve context-aware answers, and interact with your private documents.
+You can seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
+
+Edit Claude Desktop configuration and add following MCP server configuration:
+```
+Windows: %APPDATA%\Claude\claude_desktop_config.json  
+MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+```
 
 ```json
 {
