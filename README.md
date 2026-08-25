@@ -162,13 +162,14 @@ When we want to ensure a full communication privacy it is recommended to use a t
 - When you use personal voice agent over Claude Desktop it means local documents and vector database remain on the machine during search and indexing, but the specific text chunks retrieved and chat prompts are transmitted to Anthropic's cloud servers.
 
 ## Cost
-| Service       | Cost |
-|---------------|------|
-| Ollama        | Free (local) |
-| ChromaDB      | Free (local) |
-| Llama 3.2(3b) | Free (local) |
+| Service          | Cost |
+|------------------|------|
+| Ollama           | Free (local) |
+| ChromaDB         | Free (local) |
+| Llama 3.2(3b)    | Free (local) |
 | nomic-embed-text | Free (local) |
-| ElevenLabsAPI | Free tier 10000 credits/month |
+| FastMCP          | Free (local) |
+| ElevenLabsAPI    | Free tier 10000 credits/month |
 
 ## License
 
