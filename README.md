@@ -14,6 +14,7 @@ ___
 ![Python](https://img.shields.io/badge/Python-grey)
 ![Ollama](https://img.shields.io/badge/Ollama-orange)
 ![Chroma](https://img.shields.io/badge/Chroma-yellow)
+![FastMCP](https://img.shields.io/badge/FastMCP-green)
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
 
@@ -22,8 +23,7 @@ ___
 
 ## System Architecture
 
-Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources and [Gradio](https://gradio.app/) to provide a web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database . 
-[FastMCP](https://gofastmcp.com/getting-started/welcome) framework allows to expose RAG search engine to external AI clients.
+Personal voice agent is using [Ollama](https://ollama.com/) as the core LLM engine, open-source [LangChain](https://www.langchain.com/) development framework that acts as a bridge between the AI model and data sources, [FastMCP](https://gofastmcp.com/getting-started/welcome) framework that allows to expose RAG search engine to external AI clients and [Gradio](https://gradio.app/) to provide a web based UI to the user. To store user data (e.g. PDF files) it was used [Chroma](https://www.trychroma.com/) vector database .
 
 ### Gradio
 Gradio is an open-source Python package that allows to quickly access the personal voice agent using a web interface.
@@ -126,22 +126,22 @@ Example of processing a text question
 
 ## MCP support
 
-Personal voice agent features support for the Model Context Protocol (MCP) acting as MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
-It exposes RAG query pipeline to external AI clients and allows them to search over indexed documents in a vector database
+Personal voice agent features support for the Model Context Protocol (MCP) acting as a MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
+It exposes RAG query engine to external AI clients and allows them to search over indexed documents in a vector database
 
 You can seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
 
 ### Claude Desktop setup
-Update your Claude Desktop configuration **claude_desktop_config.json** by adding following MCP server configuration:
+Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration:
 
-Config file location:
+**Config file location:**
 ```
 Windows: %APPDATA%\Claude\claude_desktop_config.json  
 Linux: ~/.config/Claude/claude_desktop_config.json
 MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
-MCP server configuration:
+**MCP server configuration:**
 ```json
 {
   "mcpServers": {
@@ -160,7 +160,7 @@ MCP server configuration:
 - When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
 When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
 - When Gradio public endpoint is enabled (via _gradio_public_endpoint = True_) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through Internet and external tunnel, meaning third parties could log or intercept inputs and outputs.
-- When you use personal voice agent over Claude Desktop it means local documents and vector database remain on the machine during search and indexing, but retrieved text chunks and chat prompts are transmitted to Anthropic's cloud servers.
+- When using personal voice agent over Claude Desktop means local documents and vector database remain on the machine during search and indexing, but retrieved text chunks and chat prompts are transmitted to Anthropic's cloud servers.
 
 ## Cost
 | Service          | Cost |
