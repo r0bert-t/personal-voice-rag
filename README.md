@@ -130,6 +130,7 @@ You can seamlessly integrate personal voice agent with [Claude Desktop](https://
 Edit Claude Desktop configuration and add following MCP server configuration:
 ```
 Windows: %APPDATA%\Claude\claude_desktop_config.json  
+Linux: ~/.config/Claude/claude_desktop_config.json
 MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
