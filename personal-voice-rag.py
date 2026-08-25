@@ -34,6 +34,9 @@ mcp = FastMCP("MCP server")
 
 
 def mcp_server_run():
+    """
+    MCP server
+    """
     print("Running MCP server")
     mcp.run()
 

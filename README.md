@@ -43,7 +43,7 @@ It converts text into dense numerical vectors that capture semantic meaning and 
 Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
 
 ### MCP server
-FastMCP is a full framework for building Model Context Protocol (MCP) applications. It exposes Python functions as MCP tools, allows to connect to local MCP server and return interactive interfaces directly from tools.
+FastMCP is a full framework for building Model Context Protocol (MCP) applications. It exposes Python functions as MCP tools, allows to run a local MCP server and return interactive interfaces directly from tools.
 
 ### Spoken audio support
 
@@ -137,7 +137,7 @@ It provides functionality to expose RAG query engine to external AI clients and 
 It is possible to seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude client gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
 > Please note that Claude Desktop is processing your data on external servers rather than locally and retrieved text chunks from local RAG and chat prompts are transmitted to Anthropic's cloud servers.
 
-#### Setup
+**Instruction**
 Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration:
 
 **Config file location:**
