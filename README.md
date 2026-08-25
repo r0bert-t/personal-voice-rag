@@ -146,7 +146,7 @@ MCP server configuration:
 {
   "mcpServers": {
     "personal-voice-rag": {
-      "command": "python3.12",
+      "command": "/path/to/your/project/venv/bin/python3.12",
       "args": [
         "/path/to/your/personal-voice-rag.py"
       ]
