@@ -120,11 +120,31 @@ Example of processing a voice question
 Example of processing a text question
 ![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_02.jpg)
 
+## MCP support
+
+Personal voice agent features full support for the Model Context Protocol (MCP) acting as MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
+It exposes RAG query pipeline and indexed documents in vector database to external AI clients.
+
+You can seamlessly integrate personal voice agent with Claude Desktop. By adding to your Claude Desktop configuration file, Claude gains the ability to query your local RAG system, retrieve context-aware answers, and interact with your private documents.
+
+```json
+{
+  "mcpServers": {
+    "personal-voice-rag": {
+      "command": "python3.12",
+      "args": [
+        "/path/to/your/personal-voice-rag.py"
+      ]
+    }
+  }
+}
+```
+
 ## Privacy considerations 
 
 - When using a speech to interact with AI agent, some requests are sent to ElevenLabs platform. ElevenLabs offers [Zero Retention Mode](https://elevenlabs.io/docs/eleven-api/resources/zero-retention-mode) that can be enabled for STT and TTS APIs, when most data in requests and responses are immediately deleted once the request is completed, however it is limited only to enterprise customers.
 When we want to ensure a full communication privacy it is recommended to use a text interface to interact with AI and keep all queries processing in the local-hosted RAG and private LLM endpoints.
-- When Gradio public endpoint is enabled (via gradio_public_endpoint = True) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through Internet and external tunnel, meaning third parties could log or intercept inputs and outputs.
+- When Gradio public endpoint is enabled (via _gradio_public_endpoint = True_) this exposes personal voice agent interface, underlying data and host environment to privacy and security risk. Data submitted through the UI passes through Internet and external tunnel, meaning third parties could log or intercept inputs and outputs.
 
 ## Cost
 | Service       | Cost |
