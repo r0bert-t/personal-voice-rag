@@ -53,6 +53,16 @@ Personal voice agent is supporting following ElevenLabs APIs:
 
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 
+### Querying the local RAG system
+
+User can query the RAG system using two different retrieval strategies depending on the needs. The system uses a specialized system prompt to instruct the model on how to handle each approach:
+
+* **Standard Retriever (default)**: Direct semantic search based on the original user query.
+* **Multi-Query Retriever**: Uses a system prompt that instructs the model to generate multiple variations of the input query, capturing different perspectives to retrieve a broader and more relevant response.
+
+It is possible to enable Multi-Query Retriever query by checking the respective checkbox in the web UI. Please note that this method is more time and resource-consuming.
+
+
 ### RAG chain pipeline
 It is worth to outline a few important steps in processing RAG chain and user queries
 1. Convert a vector store into a retriever object (LangChain retriever interface) using **as_retriever** function. In the code we limit the search to return only the top 3 (default is 4) most relevant document chunks for any given query.

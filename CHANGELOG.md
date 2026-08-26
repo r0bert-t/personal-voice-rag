@@ -11,7 +11,7 @@
 
 ### Added or Changed
 - added MCP server support
-- added instruction for integration Claude desktop application 
+- added guide for connecting local RAG pipelines to the Claude desktop app, enabling private data querying directly from the Claude chat interface.
 
 ## v0.0.2 - 21-08-2026
 

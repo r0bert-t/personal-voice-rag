@@ -25,7 +25,11 @@ import asyncio
 ELEVENLABS_API_KEY = "<KEY>"
 voice_response = False
 mq_retriever = False
+
+# Expose Gradio UI using a public endpoint (Internet)
 gradio_public_endpoint = False
+
+# Run MCP server
 mcp_server = False
 
 
