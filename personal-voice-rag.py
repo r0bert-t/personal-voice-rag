@@ -4,7 +4,7 @@ Personal Voice RAG agent
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 
-Version: 0.0.3
+Version: 0.0.4
 """
 
 from elevenlabs.client import ElevenLabs
@@ -15,16 +15,16 @@ from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_community.vectorstores import Chroma
 from langchain_classic.chains import create_retrieval_chain
 from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+from langchain_classic.retrievers import MultiQueryRetriever
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
-import datetime
 import gradio as gr
 from fastmcp import FastMCP
-import threading
-
+import asyncio
 
 ELEVENLABS_API_KEY = "<KEY>"
 voice_response = False
+mq_retriever = False
 gradio_public_endpoint = False
 mcp_server = False
 
@@ -33,20 +33,19 @@ client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 mcp = FastMCP("MCP server")
 
 
-def mcp_server_run():
+def toggle_global_vars(var_name, value):
     """
-    MCP server
-    """
-    print("Running MCP server")
-    mcp.run()
-
-def toggle_voice_var(value):
-    """
-    Update global voice response variable
+    Update global variables
     """
     global voice_response
-    print(f"[ Updating voice response variable to {value} ]")
-    voice_response = value
+    global mq_retriever
+    if var_name == "voice_response":
+        print(f"[ Updating voice response variable to {value} ]")
+        voice_response = value
+    elif var_name == "mq_retriever":
+        print(f"[ Updating multi query retriever variable to {value} ]")
+        mq_retriever = value
+
 
 def run_gradio_ui():
     """
@@ -63,8 +62,12 @@ def run_gradio_ui():
                     type="filepath",
                     label="Record question"
                 )
-                checkbox = gr.Checkbox(label="Provide voice response", value=voice_response)
-                checkbox.change(fn=toggle_voice_var, inputs=checkbox, outputs="")
+                var_name_voice = gr.State(value="voice_response")
+                var_name_mqr = gr.State(value="mq_retriever")
+                checkbox_voice_resp = gr.Checkbox(label="Provide voice response", value=voice_response)
+                checkbox_mqr = gr.Checkbox(label="Enable advanced search using MultiQueryRetriever", value=mq_retriever)
+                checkbox_voice_resp.change(fn=toggle_global_vars, inputs=[var_name_voice, checkbox_voice_resp],outputs="")
+                checkbox_mqr.change(fn=toggle_global_vars, inputs=[var_name_mqr, checkbox_mqr], outputs="")
                 submit_btn_audio = gr.Button("Get answer")
             with gr.Column():
                 audio_output = gr.Textbox(
@@ -89,17 +92,18 @@ def run_gradio_ui():
                     title="Chat",
                     description="Ask me"
                 )
-        submit_btn_audio.click(fn=transcribe_audio,inputs=[audio_input],outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
-        submit_btn_pdf.click(fn=pdf_file_ingestion,inputs=[pdf_file],outputs=pdf_response)
-                
+        submit_btn_audio.click(fn=transcribe_audio, inputs=[audio_input], outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
+        submit_btn_pdf.click(fn=pdf_file_ingestion, inputs=[pdf_file], outputs=pdf_response)
+
     if gradio_public_endpoint:
         app.launch(share=True)
     else:
         app.launch()
 
+
 def transcribe_audio(audio_path):
-    """ 
-    ElevenLabs speech-to-text 
+    """
+    ElevenLabs speech-to-text
     """
 
     print("[Transcription] ", end="", flush=True)
@@ -112,9 +116,10 @@ def transcribe_audio(audio_path):
 
     return transcription.text
 
+
 def convert_to_audio(text):
-    """ 
-    ElevenLabs text-to-speech 
+    """
+    ElevenLabs text-to-speech
     """
 
     print("[ Voice response generation ]")
@@ -128,6 +133,7 @@ def convert_to_audio(text):
 
     play(audio_stream)
 
+
 def is_file_already_indexed(vector_store, file_name):
     """
     Checks if the specified file path already exists in the vector store's metadata.
@@ -135,13 +141,13 @@ def is_file_already_indexed(vector_store, file_name):
 
     # Check Chroma database to get records matching a specific metadata filter
     existing_doc = vector_store.get(where={"source": file_name}, limit=1)
-    
+
     # If the 'ids' list contains elements, the file has already been indexed
     return len(existing_doc['ids']) > 0
 
 
 def pdf_file_ingestion(file):
-    """ 
+    """
     Ingest PDF file data into vector database
     """
 
@@ -154,10 +160,13 @@ def pdf_file_ingestion(file):
     # Split text into manageable chunks
     print('[ Splitting text into chunks ]')
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,     # Characters per chunk
-        chunk_overlap=200    # Overlap to prevent losing context between chunks
+        chunk_size=1000,  # Characters per chunk
+        chunk_overlap=200  # Overlap to prevent losing context between chunks
     )
     chunks = text_splitter.split_documents(docs)
+
+    # Prevent ingestion an empty chunks
+    chunks = [doc for doc in chunks if doc.page_content.strip()]
 
     # Initialize local Ollama Embeddings
     print('[ Initializing local embeddings ]')
@@ -175,13 +184,14 @@ def pdf_file_ingestion(file):
     )
 
     # Check if file is already indexed in Chroma database
-    resp=is_file_already_indexed(vector_store, pdf_file)
+    resp = is_file_already_indexed(vector_store, pdf_file)
     print('[ File already indexed in vector store? ]', resp)
 
     if resp:
         return 'File successfully ingested'
     else:
         return 'Something went wrong'
+
 
 @mcp.tool()
 def query_knowledge_database(query: str):
@@ -192,15 +202,15 @@ def query_knowledge_database(query: str):
     embeddings = OllamaEmbeddings(
         model="nomic-embed-text"
     )
-    
+
     vector_store = Chroma(
         embedding_function=embeddings,
         persist_directory="./chroma_db"
     )
-    
+
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})  # Fetch top 3 chunks
     llm = ChatOllama(model="llama3.2:3b", temperature=0)
-    
+
     # Create the RAG prompt template
     system_prompt = (
         "You are an assistant for question-answering tasks.\n"
@@ -212,7 +222,7 @@ def query_knowledge_database(query: str):
         ("system", system_prompt),
         ("human", "{input}"),
     ])
-    
+
     # Build and execute the retrieval-QA chain
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
     rag_chain = create_retrieval_chain(retriever, question_answer_chain)
@@ -224,10 +234,11 @@ def query_knowledge_database(query: str):
     else:
         response_text = str(response)
 
-    return f"search results: {response_text}"  
+    return f"search results: {response_text}"
 
-def rag_chain_query(user_query_text, null):
-    """ 
+
+def rag_chain_query(user_query_text, history=None):
+    """
     Construct and execute the retrieval-QA chain query
     """
 
@@ -238,15 +249,21 @@ def rag_chain_query(user_query_text, null):
     embeddings = OllamaEmbeddings(
         model="nomic-embed-text"
     )
-    
+
     vector_store = Chroma(
         embedding_function=embeddings,
         persist_directory="./chroma_db"
     )
-    
+
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})  # Fetch top 3 chunks
     llm = ChatOllama(model="llama3.2:3b", temperature=0)
-    
+
+    # Multi Query Retriever
+    multiquery_retriever = MultiQueryRetriever.from_llm(
+        retriever=retriever,
+        llm=llm
+    )
+
     # Create the RAG prompt template
     system_prompt = (
         "You are an assistant for question-answering tasks.\n"
@@ -258,23 +275,26 @@ def rag_chain_query(user_query_text, null):
         ("system", system_prompt),
         ("human", "{input}"),
     ])
-    
+
     # Build and execute the retrieval-QA chain
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 
+    if mq_retriever:
+        rag_chain = create_retrieval_chain(multiquery_retriever, question_answer_chain)
+    else:
+        rag_chain = create_retrieval_chain(retriever, question_answer_chain)
     response = rag_chain.stream({"input": user_query_text})
 
     response_text = ''
 
     print("\n[ Processing query ]")
     for chunk in response:
-        print(chunk.get("answer",""), end="", flush=True)
+        print(chunk.get("answer", ""), end="", flush=True)
         if isinstance(chunk, dict) and "answer" in chunk:
             response_text += chunk["answer"]
             yield response_text
     print("\n")
-    
+
     if voice_response:
         print("[ Converting response to audio ]")
         convert_to_audio(response_text)
@@ -282,16 +302,32 @@ def rag_chain_query(user_query_text, null):
         print("[ No conversion to audio ]")
 
 
-def main():
+async def main():
     try:
         # Run MCP server
         if mcp_server:
-            bg_thread = threading.Thread(target=mcp_server_run, daemon=True)
-            bg_thread.start()
+            mcp_task = asyncio.create_task(mcp.run_async())
+        else:
+            mcp_task = None
         # Run gradio UI
         run_gradio_ui()
-    except:
+    except (KeyboardInterrupt, asyncio.CancelledError):
         print("\nSomething went wrong")
+    finally:
+        if mcp_task and not mcp_task.done():
+            print("[ Canceling MCP server task ]")
+            mcp_task.cancel()  # Sends a CancelledError to the background task
+
+            try:
+                # Wait for the task to finish internal cleanup
+                await mcp_task
+            except asyncio.CancelledError:
+                print("[ MCP server stopped ]")
+            except Exception as e:
+                print(f"[ Error during MCP server shutdown {e} ]")
+
+        print("[ Shutdown complete ]")
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

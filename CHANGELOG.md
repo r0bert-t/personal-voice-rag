@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.4 - TBU
+
+### Added or Changed
+- added MultiQueryRetriever support to improve retrieval accuracy for complex user queries
+- refactored MCP server startup to use asynchronous architecture (asyncio) instead of operating system threads
+- added validation to prevent the ingestion of empty chunks
+
 ## v0.0.3 - 25-08-2026
 
 ### Added or Changed
