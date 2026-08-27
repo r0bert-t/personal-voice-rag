@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.4 - TBU
+## v0.0.4 - 27-08-2026
 
 ### Added or Changed
 - added MultiQueryRetriever support to improve retrieval accuracy for complex user queries

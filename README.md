@@ -53,7 +53,7 @@ Personal voice agent is supporting following ElevenLabs APIs:
 
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 
-### Querying the local RAG system
+## Querying the local RAG system
 
 User can query the RAG system using two different retrieval strategies depending on the needs. The system uses a specialized system prompt to instruct the model on how to handle each approach:
 
@@ -87,7 +87,7 @@ In code we are using following system prompt that instructs the model what to do
 4.	The retrieved response is converted to audio using ElevenLabs TTS API
 5.	ElevenLabs reads it to the user
 
-### Voice RAG setup
+## Voice RAG setup
 ```bash
 # Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
@@ -148,6 +148,7 @@ It is possible to seamlessly integrate personal voice agent with [Claude Desktop
 > Please note that Claude Desktop is processing your data on external servers rather than locally and retrieved text chunks from local RAG and chat prompts are transmitted to Anthropic's cloud servers.
 
 **Instruction**
+
 Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration:
 
 **Config file location:**
