@@ -4,15 +4,22 @@ Personal Voice RAG agent
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 
-Version: 0.0.4
+Version: 0.0.5
 """
+import sys
+import warnings
+
+def custom_showwarning(message, category, filename, lineno, file=None, line=None):
+    sys.stderr.write(warnings.formatwarning(message, category, filename, lineno, line))
+
+warnings.showwarning = custom_showwarning
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from elevenlabs.client import ElevenLabs
 from elevenlabs.play import play
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings, ChatOllama
-from langchain_community.vectorstores import Chroma
 from langchain_classic.chains import create_retrieval_chain
 from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 from langchain_classic.retrievers import MultiQueryRetriever
@@ -21,6 +28,7 @@ from langchain_chroma import Chroma
 import gradio as gr
 from fastmcp import FastMCP
 import asyncio
+import os
 
 ELEVENLABS_API_KEY = "<KEY>"
 voice_response = False
@@ -32,6 +40,9 @@ gradio_public_endpoint = False
 # Run MCP server
 mcp_server = False
 
+# Location for the vector database
+current_dir = os.path.dirname(os.path.realpath(__file__))
+vectordb_path = os.path.join(current_dir, "chroma_db")
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 mcp = FastMCP("MCP server")
@@ -100,9 +111,9 @@ def run_gradio_ui():
         submit_btn_pdf.click(fn=pdf_file_ingestion, inputs=[pdf_file], outputs=pdf_response)
 
     if gradio_public_endpoint:
-        app.launch(share=True)
+        app.launch(share=True,prevent_thread_lock=True,quiet=True)
     else:
-        app.launch()
+        app.launch(prevent_thread_lock=True,quiet=True)
 
 
 def transcribe_audio(audio_path):
@@ -209,7 +220,7 @@ def query_knowledge_database(query: str):
 
     vector_store = Chroma(
         embedding_function=embeddings,
-        persist_directory="./chroma_db"
+        persist_directory=vectordb_path
     )
 
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})  # Fetch top 3 chunks
@@ -315,6 +326,10 @@ async def main():
             mcp_task = None
         # Run gradio UI
         run_gradio_ui()
+
+        while True:
+            await asyncio.sleep(1)
+
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("\nSomething went wrong")
     finally:

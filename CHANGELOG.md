@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.5 - TBU
+
+### Added or Changed
+- 
+
 ## v0.0.4 - 27-08-2026
 
 ### Added or Changed

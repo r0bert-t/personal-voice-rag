@@ -166,7 +166,10 @@ MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
       "command": "/path/to/your/project/venv/bin/python3.12",
       "args": [
         "/path/to/your/personal-voice-rag.py"
-      ]
+      ],
+      "env": {
+        "VECTOR_DB_DIR": "/path/to/your/project/chroma_db"
+      }
     }
   }
 }
