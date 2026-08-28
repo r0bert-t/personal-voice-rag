@@ -3,7 +3,7 @@
 ## v0.0.5 - TBU
 
 ### Added or Changed
-- Enhanced support for Claude Desktop connectivity to local RAG on MacOS
+- Enhanced support for Claude Desktop integration with local RAG on MacOS (MCP with stdio transport)
 - Some minor fixes
 
 ## v0.0.4 - 27-08-2026

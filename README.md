@@ -18,7 +18,7 @@ ___
 ![ElevenLabs](https://img.shields.io/badge/ElevenLabsAPI-black)
 
 
-![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/feature/mcp-server/docs/personal-voice-rag_v2.png)
+![System architecture](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal-voice-rag_v2.png)
 
 
 ## System Architecture
@@ -132,10 +132,10 @@ http://localhost:7860
 ## Sample screenshots
 
 Example of processing a voice question
-![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_01.jpg)
+![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal_voice_agent_UI_01.jpg)
 
 Example of processing a text question
-![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/feature/gradio-ui/docs/personal_voice_agent_UI_02.jpg)
+![Web UI](https://github.com/r0bert-t/personal-voice-rag/blob/main/docs/personal_voice_agent_UI_02.jpg)
 
 ## MCP support
 
@@ -166,15 +166,12 @@ MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
       "command": "/path/to/your/project/venv/bin/python3.12",
       "args": [
         "/path/to/your/personal-voice-rag.py"
-      ],
-      "env": {
-        "VECTOR_DB_DIR": "/path/to/your/project/chroma_db"
-      }
+      ]
     }
   }
 }
 ```
-If you successfully configure Claude desktop to access personal voice agent over MCP, you should be able to see active plugin in the 'Connectors'
+If you successfully configure Claude desktop to access personal voice agent over MCP, you should be able to see active plugin in the 'Connectors'.
 
 ![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/improvements/docs/claude_desktop_setup_01.jpg)
 
