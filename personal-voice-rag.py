@@ -6,13 +6,14 @@ over large sets of private documents in a local vector database.
 
 Version: 0.0.5
 """
+
 import sys
 import warnings
 
-def custom_showwarning(message, category, filename, lineno, file=None, line=None):
+def custom_show_warning(message, category, filename, lineno, file=None, line=None):
     sys.stderr.write(warnings.formatwarning(message, category, filename, lineno, line))
 
-warnings.showwarning = custom_showwarning
+warnings.showwarning = custom_show_warning
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from elevenlabs.client import ElevenLabs
@@ -40,7 +41,7 @@ gradio_public_endpoint = False
 # Run MCP server
 mcp_server = False
 
-# Location for the vector database
+# Location of the vector database
 current_dir = os.path.dirname(os.path.realpath(__file__))
 vectordb_path = os.path.join(current_dir, "chroma_db")
 
@@ -112,8 +113,10 @@ def run_gradio_ui():
 
     if gradio_public_endpoint:
         app.launch(share=True,prevent_thread_lock=True,quiet=True)
-    else:
+    elif mcp_server:
         app.launch(prevent_thread_lock=True,quiet=True)
+    else:
+        app.launch(prevent_thread_lock=True)
 
 
 def transcribe_audio(audio_path):

@@ -3,7 +3,8 @@
 ## v0.0.5 - TBU
 
 ### Added or Changed
-- 
+- Enhanced support for Claude Desktop connectivity to local RAG on MacOS
+- Some minor fixes
 
 ## v0.0.4 - 27-08-2026
 

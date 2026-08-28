@@ -178,9 +178,6 @@ If you successfully configure Claude desktop to access personal voice agent over
 
 ![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/improvements/docs/claude_desktop_setup_01.jpg)
 
-To query an internal vector database using a Claude Desktop, you have to formulate your question to indicate that Claude needs to use connector.
-
-![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/improvements/docs/claude_desktop_setup_02.jpg)
 
 ## Privacy considerations 
 
