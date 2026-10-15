@@ -4,7 +4,7 @@ Personal Voice RAG agent
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 
-Version: 0.0.5
+Version: 0.0.6
 """
 
 import sys
@@ -97,6 +97,7 @@ def run_gradio_ui():
             with gr.Column():
                 pdf_file = gr.File(label="Upload a PDF file")
                 submit_btn_pdf = gr.Button("Upload file")
+                submit_btn_vec_db = gr.Button("Check indexed files")
                 pdf_response = gr.Textbox(
                     label="Response",
                     interactive=False
@@ -110,6 +111,7 @@ def run_gradio_ui():
                 )
         submit_btn_audio.click(fn=transcribe_audio, inputs=[audio_input], outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
         submit_btn_pdf.click(fn=pdf_file_ingestion, inputs=[pdf_file], outputs=pdf_response)
+        submit_btn_vec_db.click(fn=check_indexed_files, inputs=[], outputs=pdf_response)
 
     if gradio_public_endpoint:
         app.launch(share=True,prevent_thread_lock=True,quiet=True)
@@ -150,6 +152,53 @@ def convert_to_audio(text):
     )
 
     play(audio_stream)
+
+
+def check_indexed_files():
+    """
+    Provide a list of indexed files retrieved from vector store's metadata
+    """
+
+    embeddings = OllamaEmbeddings(
+        model="nomic-embed-text"
+    )
+
+    vector_store = Chroma(
+        embedding_function=embeddings,
+        persist_directory=vectordb_path
+    )
+
+    # Fetch data and request only metadatas
+    data = vector_store.get(include=["metadatas"])
+    metadatas = data.get("metadatas", [])
+
+    indexed_files = {}
+
+    # Use a set to keep track of uniquely seen files
+    seen_files = set()
+
+    # Iterate directly over the retrieved metadata list
+    if metadatas:
+        for doc in metadatas:
+            source = doc.get("source", "Unknown Source")
+            creation_date = doc.get("creationdate", "Unknown Date")
+
+            # Extract filename from the path
+            filename = os.path.basename(source)
+
+            # Create a unique identifier for the file
+            file_fingerprint = (source, creation_date)
+
+            if file_fingerprint not in seen_files:
+                # print(f"Source: {filename} | Created: {creation_date}")
+                seen_files.add(file_fingerprint)
+                indexed_files[filename] = creation_date
+
+    else:
+        return "No indexed documents or metadata found."
+
+    files_list = [item for item in indexed_files.keys()]
+    return "\n".join(files_list)
 
 
 def is_file_already_indexed(vector_store, file_name):

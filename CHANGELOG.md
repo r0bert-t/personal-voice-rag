@@ -4,6 +4,7 @@
 
 ### Added or Changed
 - updated Text-to-Speech (TTS) conversion to support the latest Eleven v4 turbo model
+- added functionality to check indexed pdf files in the vector database.
 
 ## v0.0.5 - 29-08-2026
 
