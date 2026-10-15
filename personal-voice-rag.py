@@ -145,7 +145,7 @@ def convert_to_audio(text):
     audio_stream = client.text_to_speech.convert(
         text=text,
         voice_id="JBFqnCBsd6RMkjVDRZzb",
-        model_id="eleven_v3",
+        model_id="eleven_v4_turbo",
         output_format="mp3_44100_128",
     )
 
