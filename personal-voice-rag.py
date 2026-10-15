@@ -195,7 +195,7 @@ def check_indexed_files():
                 indexed_files[filename] = creation_date
 
     else:
-        return "No indexed documents or metadata found."
+        return 'No indexed documents or metadata found'
 
     files_list = [item for item in indexed_files.keys()]
     return "\n".join(files_list)
@@ -217,6 +217,8 @@ def pdf_file_ingestion(file):
     """
     Ingest PDF file data into vector database
     """
+    if not file:
+        return 'Provide a valid file'
 
     # Load the PDF document
     print("[ Loading PDF ]")
