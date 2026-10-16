@@ -1,7 +1,7 @@
 # Personal Voice RAG agent
 
 ## Core features
-- Supports spoken audio to interact with AI models with voice high accuracy, ultra-low latency and deep multilingual support (90+ languages)
+- Supports spoken audio to interact with AI models with voice high accuracy, ultra-low latency and deep multilingual support (70+ languages)
 - Allows to perform fast semantic search over large sets of private documents in a local vector database
 - Eliminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external servers
 
@@ -49,7 +49,7 @@ FastMCP is a full framework for building Model Context Protocol (MCP) applicatio
 
 Personal voice agent is supporting following ElevenLabs APIs:
 - **ElevenLabs Speech to Text (STT)** powered by the [Scribe v2](https://elevenlabs.io/speech-to-text) model, that converts spoken audio into highly accurate written text. It can handle complex audio environments (e.g. with background noise, overlapping speech).
-- **ElevenLabs Text-to-Speech (TTS)** that enables to generate lifelike, emotionally rich, and human-like speech from text in over 90 language. It features ultra-low latency and supports real-time audio streaming. Personal voice agent was configured to use for text to audio conversion [Eleven v4 turbo](https://elevenlabs.io/v4) model which is fastest real-time speech model with expressive range of Eleven v4.
+- **ElevenLabs Text-to-Speech (TTS)** that enables to generate lifelike, emotionally rich, and human-like speech from text in over 70 language. It features ultra-low latency and supports real-time audio streaming. Personal voice agent was configured to use for text to audio conversion [Eleven v3](https://elevenlabs.io/v3) model which is most expressive ElevenLabs AI voice model
 
 > Please note that in order to use ElevenLabs APIs you have to generate a valid API key on [ElevenLabs Platform](https://elevenlabs.io/api) and set the proper endpoints access
 

@@ -1,17 +1,10 @@
 # Changelog
 
-## v0.0.6 - 16-10-2026
-
-### Added or Changed
-- updated Text-to-Speech (TTS) conversion to support the latest Eleven v4 turbo model
-- added functionality to check indexed pdf files in the vector database
-- some minor fixes
-
 ## v0.0.5 - 29-08-2026
 
 ### Added or Changed
-- enhanced support in MacOS for Claude Desktop integration with local RAG (MCP with stdio transport)
-- some minor fixes
+- Enhanced support in MacOS for Claude Desktop integration with local RAG (MCP with stdio transport)
+- Some minor fixes
 
 ## v0.0.4 - 27-08-2026
 
