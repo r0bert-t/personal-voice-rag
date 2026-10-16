@@ -173,8 +173,16 @@ MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 If you successfully configure Claude desktop to access personal voice agent over MCP, you should be able to see active plugin in the 'Connectors'.
 
-![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/improvements/docs/claude_desktop_setup_01.jpg)
+![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/collections/docs/claude_desktop_setup_01.png)
 
+**Query data**
+Start a chat and ask Claude to search your private documents:
+
+Sample prompt:
+```
+"Search local knowledge database and collection XYZ for information about [your topic] and summarize what you find."
+```
+Claude will automatically invoke the query knowledge database tool, retrieve relevant chunks from vector database, and answer with local context.
 
 ## Privacy considerations 
 
