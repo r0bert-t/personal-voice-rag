@@ -3,7 +3,7 @@
 ## Core features
 - Supports spoken audio to interact with AI models with voice high accuracy, ultra-low latency and deep multilingual support (90+ languages)
 - Allows to perform fast semantic search over large sets of private documents in a local vector database
-- Eliminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external servers
+- Eliminate token costs and allows to run large language models (LLMs) directly on user own hardware without relying on external AI providers
 
 ___
 > **Use-cases:**

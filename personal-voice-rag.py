@@ -159,7 +159,7 @@ def convert_to_audio(text):
 
 def check_indexed_files():
     """
-    Provide a list of indexed files retrieved from vector store's metadata
+    Provides a list of indexed files retrieved from vector store's metadata
     """
 
     embeddings = OllamaEmbeddings(
