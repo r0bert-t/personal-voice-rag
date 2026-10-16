@@ -31,9 +31,8 @@ from fastmcp import FastMCP
 import asyncio
 import os
 
+
 ELEVENLABS_API_KEY = "<KEY>"
-voice_response = False
-mq_retriever = False
 
 # Expose Gradio UI using a public endpoint (Internet)
 gradio_public_endpoint = False
@@ -41,12 +40,16 @@ gradio_public_endpoint = False
 # Run MCP server
 mcp_server = False
 
+
 # Location of the vector database
 current_dir = os.path.dirname(os.path.realpath(__file__))
 vectordb_path = os.path.join(current_dir, "chroma_db")
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 mcp = FastMCP("MCP server")
+
+voice_response = False
+mq_retriever = False
 
 
 def toggle_global_vars(var_name, value):
@@ -167,6 +170,8 @@ def check_indexed_files():
         embedding_function=embeddings,
         persist_directory=vectordb_path
     )
+
+    print('[ Checking indexed files in the vector database metadata ]')
 
     # Fetch data and request only metadatas
     data = vector_store.get(include=["metadatas"])
@@ -385,7 +390,7 @@ async def main():
             await asyncio.sleep(1)
 
     except (KeyboardInterrupt, asyncio.CancelledError):
-        print("\nSomething went wrong")
+        print("\n[ Closing session ]")
     finally:
         if mcp_task and not mcp_task.done():
             print("[ Canceling MCP server task ]")

@@ -1,10 +1,11 @@
 # Changelog
 
-## v0.0.6 - TBU
+## v0.0.6 - 16-10-2026
 
 ### Added or Changed
 - updated Text-to-Speech (TTS) conversion to support the latest Eleven v4 turbo model
-- added functionality to check indexed pdf files in the vector database.
+- added functionality to check indexed pdf files in the vector database
+- some minor fixes
 
 ## v0.0.5 - 29-08-2026
 
