@@ -33,17 +33,21 @@ Ollama is a free, open-source software platform that allows you to run, manage, 
 
 #### LLM model
 Meta's [Llama 3.2 (3B)](https://ollama.com/library/llama3.2:3b) is a lightweight text model that runs smoothly on almost any modern personal computer and achieves fast response speeds on standard CPUs, Apple Silicon or dedicated graphics cards. It offers maximum context window of 128K tokens.
-Of course it is possible to use other models available in [Ollama library](https://ollama.com/library) depending on the available hardware performance.
+Other models available in the [Ollama library](https://ollama.com/library) can be used, depending on your hardware performance.
 
 #### Embedding model 
 For embedding it was used a [nomic-embed-text:v1.5](https://ollama.com/library/nomic-embed-text) which is a high-performing open embedding model with a large token context window.
 It converts text into dense numerical vectors that capture semantic meaning and also allows to search local vector store for relevant context.
 
-### Chroma database
-Chroma database (ChromaDB) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
+### Chroma vector database
+Chroma database ([ChromaDB](https://www.trychroma.com/products/chromadb)) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
+
+#### Collections in Chroma database
+Collections allow to logically isolate different sets of documents. They act like individual tables in a relational database. By querying a specific collection rather than the entire database, it is possible to eliminate background noise and irrelevant data.
+At the same time it is possible to achieve much faster query performance.
 
 ### MCP server
-FastMCP is a full framework for building Model Context Protocol (MCP) applications. It exposes Python functions as MCP tools, allows to run a local MCP server and return interactive interfaces directly from tools.
+[FastMCP](https://gofastmcp.com/servers/server) is a full framework for building Model Context Protocol (MCP) applications. It exposes Python functions as MCP tools, allows to run a local MCP server and return interactive interfaces directly from tools.
 
 ### Spoken audio support
 
@@ -139,7 +143,7 @@ Example of processing a text question
 
 ## MCP support
 
-Personal voice agent features support for the Model Context Protocol (MCP) acting as a MCP server. This can be enabled by setting a proper flag (via _mcp_server = True_).
+Personal voice agent features support for the Model Context Protocol (MCP) acting as a MCP server. This can be enabled by setting a proper flag (via **_mcp_server = True_**).
 It provides functionality to expose RAG query engine to external AI clients and allows them to search over indexed documents in a vector database.
 
 ### Claude Desktop integration
@@ -147,9 +151,9 @@ It provides functionality to expose RAG query engine to external AI clients and 
 It is possible to seamlessly integrate personal voice agent with [Claude Desktop](https://claude.com/product/overview). Claude client gains the ability to query local RAG, retrieve context-aware answers, and interact with local documents stored in a vector database.
 > Please note that Claude Desktop is processing your data on external servers rather than locally and retrieved text chunks from local RAG and chat prompts are transmitted to Anthropic's cloud servers.
 
-**Instruction**
+### Instruction
 
-Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration:
+Update your Claude Desktop configuration file **claude_desktop_config.json** by adding following MCP server configuration.
 
 **Config file location:**
 ```
@@ -157,8 +161,9 @@ Windows: %APPDATA%\Claude\claude_desktop_config.json
 Linux: ~/.config/Claude/claude_desktop_config.json
 MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
+You can open config file in Claude Desktop by selecting **Settings** > **Developer** > **Edit config**
 
-**MCP server configuration:**
+**MCP configuration:**
 ```json
 {
   "mcpServers": {
@@ -177,9 +182,8 @@ If you successfully configure Claude desktop to access personal voice agent over
 
 **Query data**
 
-Start a chat and ask Claude to search your private documents:
+Start a chat and ask Claude to search your private documents. Following sample prompt instructs Claude to query local RAG and specific collection.
 
-Sample prompt:
 ```
 "Search local knowledge database and collection XYZ for information about [your topic] and 
 summarize what you find."
