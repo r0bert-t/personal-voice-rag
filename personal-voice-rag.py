@@ -4,14 +4,16 @@ Personal Voice RAG agent
 Description: Allows to interact with AI models hosted on local Ollama using a text/speech and to perform fast semantic search
 over large sets of private documents in a local vector database.
 
-Version: 0.0.6
+Version: 0.0.7
 """
 
 import sys
 import warnings
 
+
 def custom_show_warning(message, category, filename, lineno, file=None, line=None):
     sys.stderr.write(warnings.formatwarning(message, category, filename, lineno, line))
+
 
 warnings.showwarning = custom_show_warning
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -28,6 +30,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
 import gradio as gr
 from fastmcp import FastMCP
+import chromadb
 import asyncio
 import os
 
@@ -40,10 +43,17 @@ gradio_public_endpoint = False
 # Run MCP server
 mcp_server = False
 
-
 # Location of the vector database
-current_dir = os.path.dirname(os.path.realpath(__file__))
+current_dir = os.path.dirname(os.path.abspath(__file__))
 vectordb_path = os.path.join(current_dir, "chroma_db")
+
+os.makedirs(vectordb_path, exist_ok=True)
+
+# Initialize the persistent ChromaDB client
+persistent_client = chromadb.PersistentClient(
+    path=vectordb_path,
+    settings=chromadb.Settings(anonymized_telemetry=False)
+)
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 mcp = FastMCP("MCP server")
@@ -64,64 +74,6 @@ def toggle_global_vars(var_name, value):
     elif var_name == "mq_retriever":
         print(f"[ Updating multi query retriever variable to {value} ]")
         mq_retriever = value
-
-
-def run_gradio_ui():
-    """
-    Gradio UI
-    """
-    with gr.Blocks(title="Personal Voice RAG") as app:
-        gr.Markdown("""
-        # Personal Voice RAG agent
-        """)
-        with gr.Row():
-            with gr.Column(scale=1):
-                audio_input = gr.Audio(
-                    sources=["microphone", "upload"],
-                    type="filepath",
-                    label="Record question"
-                )
-                var_name_voice = gr.State(value="voice_response")
-                var_name_mqr = gr.State(value="mq_retriever")
-                checkbox_voice_resp = gr.Checkbox(label="Provide voice response", value=voice_response)
-                checkbox_mqr = gr.Checkbox(label="Enable advanced search using MultiQueryRetriever", value=mq_retriever)
-                checkbox_voice_resp.change(fn=toggle_global_vars, inputs=[var_name_voice, checkbox_voice_resp],outputs="")
-                checkbox_mqr.change(fn=toggle_global_vars, inputs=[var_name_mqr, checkbox_mqr], outputs="")
-                submit_btn_audio = gr.Button("Get answer")
-            with gr.Column():
-                audio_output = gr.Textbox(
-                    label="What I heard",
-                    interactive=False
-                )
-                audio_response = gr.Textbox(
-                    label="Response",
-                    interactive=False
-                )
-            with gr.Column():
-                pdf_file = gr.File(label="Upload a PDF file")
-                submit_btn_pdf = gr.Button("Upload file")
-                submit_btn_vec_db = gr.Button("Check indexed files")
-                pdf_response = gr.Textbox(
-                    label="Response",
-                    interactive=False
-                )
-        with gr.Row():
-            with gr.Column():
-                chatb = gr.ChatInterface(
-                    fn=rag_chain_query,
-                    title="Chat",
-                    description="Ask me"
-                )
-        submit_btn_audio.click(fn=transcribe_audio, inputs=[audio_input], outputs=audio_output).then(fn=rag_chain_query,inputs=audio_output,outputs=audio_response)
-        submit_btn_pdf.click(fn=pdf_file_ingestion, inputs=[pdf_file], outputs=pdf_response)
-        submit_btn_vec_db.click(fn=check_indexed_files, inputs=[], outputs=pdf_response)
-
-    if gradio_public_endpoint:
-        app.launch(share=True,prevent_thread_lock=True,quiet=True)
-    elif mcp_server:
-        app.launch(prevent_thread_lock=True,quiet=True)
-    else:
-        app.launch(prevent_thread_lock=True)
 
 
 def transcribe_audio(audio_path):
@@ -157,9 +109,40 @@ def convert_to_audio(text):
     play(audio_stream)
 
 
-def check_indexed_files():
+def get_existing_collections():
     """
-    Provides a list of indexed files retrieved from vector store's metadata
+    Fetches collection names from ChromaDB
+    """
+
+    try:
+        # Return a list of all collection and bypass the default pagination limit
+        collections = persistent_client.list_collections(limit=10000)
+
+        # Extract names and exclude any blank spaces and transient errors
+        names = sorted([col.name for col in collections if col.name.strip()])
+
+        return names
+    except Exception as e:
+        print(f"Vector database error during collections fetch: {str(e)}")
+        return []
+
+
+def refresh_collections_dropdown():
+    """
+    Refresh collection list
+    """
+
+    updated_list = get_existing_collections()
+
+    if not updated_list:
+        return gr.Dropdown(choices=["No collections found"], value="No collections found")
+
+    return gr.Dropdown(choices=updated_list, value=updated_list[0])
+
+
+def check_indexed_files(collection):
+    """
+    Provide a list of indexed files retrieved from vector store's metadata
     """
 
     embeddings = OllamaEmbeddings(
@@ -168,10 +151,9 @@ def check_indexed_files():
 
     vector_store = Chroma(
         embedding_function=embeddings,
-        persist_directory=vectordb_path
+        client=persistent_client,
+        collection_name=collection
     )
-
-    print('[ Checking indexed files in the vector database metadata ]')
 
     # Fetch data and request only metadatas
     data = vector_store.get(include=["metadatas"])
@@ -200,7 +182,7 @@ def check_indexed_files():
                 indexed_files[filename] = creation_date
 
     else:
-        return 'No indexed documents or metadata found'
+        return "No indexed documents or metadata found."
 
     files_list = [item for item in indexed_files.keys()]
     return "\n".join(files_list)
@@ -218,12 +200,16 @@ def is_file_already_indexed(vector_store, file_name):
     return len(existing_doc['ids']) > 0
 
 
-def pdf_file_ingestion(file):
+def pdf_file_ingestion(file, collection_input):
     """
     Ingest PDF file data into vector database
     """
+
     if not file:
-        return 'Provide a valid file'
+        return "Provide a valid file"
+
+    if not collection_input:
+        return "Provide a collection name"
 
     # Load the PDF document
     print("[ Loading PDF ]")
@@ -232,7 +218,7 @@ def pdf_file_ingestion(file):
     docs = loader.load()
 
     # Split text into manageable chunks
-    print('[ Splitting text into chunks ]')
+    print("[ Splitting text into chunks ]")
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,  # Characters per chunk
         chunk_overlap=200  # Overlap to prevent losing context between chunks
@@ -243,34 +229,35 @@ def pdf_file_ingestion(file):
     chunks = [doc for doc in chunks if doc.page_content.strip()]
 
     # Initialize local Ollama Embeddings
-    print('[ Initializing local embeddings ]')
+    print("[ Initializing local embeddings ]")
     embeddings = OllamaEmbeddings(
         model="nomic-embed-text"  # High-performance local embedding model
     )
 
     # Create local Vector store (Chroma) and index the chunks
-    print('[ Indexing chunks into Chroma vector store ]')
+    print("[ Indexing chunks into Chroma vector store ]")
 
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory="./chroma_db"
+        client=persistent_client,
+        collection_name=collection_input,
     )
 
     # Check if file is already indexed in Chroma database
     resp = is_file_already_indexed(vector_store, pdf_file)
-    print('[ File already indexed in vector store? ]', resp)
+    print("[ File already indexed in vector store? ]", resp)
 
     if resp:
-        return 'File successfully ingested'
+        return "File successfully ingested"
     else:
-        return 'Something went wrong'
+        return "Something went wrong"
 
 
 @mcp.tool()
-def query_knowledge_database(query: str):
+def query_knowledge_database(query: str, collection: str):
     """
-    Use this tool to perform a semantic similarity search againts the local vector database
+    Use this tool to perform a semantic similarity search against the local vector database
     """
 
     embeddings = OllamaEmbeddings(
@@ -279,7 +266,8 @@ def query_knowledge_database(query: str):
 
     vector_store = Chroma(
         embedding_function=embeddings,
-        persist_directory=vectordb_path
+        client=persistent_client,
+        collection_name=collection
     )
 
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})  # Fetch top 3 chunks
@@ -311,7 +299,7 @@ def query_knowledge_database(query: str):
     return f"search results: {response_text}"
 
 
-def rag_chain_query(user_query_text, history=None):
+def rag_chain_query(user_query_text, history, collection):
     """
     Construct and execute the retrieval-QA chain query
     """
@@ -326,7 +314,8 @@ def rag_chain_query(user_query_text, history=None):
 
     vector_store = Chroma(
         embedding_function=embeddings,
-        persist_directory="./chroma_db"
+        client=persistent_client,
+        collection_name=collection
     )
 
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})  # Fetch top 3 chunks
@@ -374,6 +363,101 @@ def rag_chain_query(user_query_text, history=None):
         convert_to_audio(response_text)
     else:
         print("[ No conversion to audio ]")
+
+
+def run_gradio_ui():
+    """
+    Gradio UI
+    """
+
+    initial_collections = get_existing_collections()
+    default_selection = initial_collections[0] if initial_collections else None
+
+    with gr.Blocks(title="Personal Voice RAG") as app:
+        gr.Markdown("""
+        # Personal Voice RAG agent
+        """)
+        with gr.Row():
+            with gr.Column(scale=1):
+                audio_input = gr.Audio(
+                    sources=["microphone", "upload"],
+                    type="filepath",
+                    label="Record question"
+                )
+                var_name_voice = gr.State(value="voice_response")
+                var_name_mqr = gr.State(value="mq_retriever")
+                checkbox_voice_resp = gr.Checkbox(label="Provide voice response", value=voice_response)
+                checkbox_mqr = gr.Checkbox(label="Enable advanced search using MultiQueryRetriever", value=mq_retriever)
+                checkbox_voice_resp.change(fn=toggle_global_vars, inputs=[var_name_voice, checkbox_voice_resp], outputs="")
+                checkbox_mqr.change(fn=toggle_global_vars, inputs=[var_name_mqr, checkbox_mqr], outputs="")
+                submit_btn_audio = gr.Button("Get answer")
+            with gr.Column():
+                audio_output = gr.Textbox(
+                    label="What I heard",
+                    interactive=False
+                )
+                audio_response = gr.Textbox(
+                    label="Response",
+                    interactive=False
+                )
+            with gr.Column():
+                pdf_file = gr.File(label="Upload a PDF file")
+                collection_input = gr.Textbox(
+                    label="Collection name",
+                    placeholder="e.g., finance_notes"
+                )
+                submit_btn_pdf = gr.Button("Upload file")
+                pdf_response = gr.Textbox(
+                    label="Response",
+                    interactive=False
+                )
+        with gr.Row():
+            with gr.Column():
+                gr.Markdown("## Active collection")
+                collection = gr.Dropdown(
+                    choices=initial_collections,
+                    value=default_selection,
+                    label="Select vector database collection",
+                    interactive=True
+                )
+                refresh_btn = gr.Button("Refresh collection list")
+
+                gr.HTML("<hr>")
+                gr.Markdown("## Indexed files")
+                vec_db_response = gr.Textbox(
+                    label="Response",
+                    interactive=False
+                )
+                submit_btn_vec_db = gr.Button("Check indexed files")
+
+            with gr.Column():
+                chatb = gr.ChatInterface(
+                    fn=rag_chain_query,
+                    additional_inputs=[collection],
+                    title="Chat",
+                    description="Ask me"
+                )
+        none_state = gr.State(None)
+        submit_btn_audio.click(fn=transcribe_audio, inputs=[audio_input], outputs=audio_output).then(fn=rag_chain_query, inputs=[audio_output,none_state,collection], outputs=audio_response)
+        submit_btn_pdf.click(fn=pdf_file_ingestion, inputs=[pdf_file, collection_input], outputs=pdf_response
+        ).then(
+            fn=refresh_collections_dropdown,
+            inputs=None,
+            outputs=collection
+        )
+        submit_btn_vec_db.click(fn=check_indexed_files, inputs=[collection], outputs=vec_db_response)
+        refresh_btn.click(
+            fn=refresh_collections_dropdown,
+            inputs=None,
+            outputs=collection
+        )
+
+    if gradio_public_endpoint:
+        app.launch(share=True, prevent_thread_lock=True, quiet=True)
+    elif mcp_server:
+        app.launch(prevent_thread_lock=True, quiet=True)
+    else:
+        app.launch(prevent_thread_lock=True)
 
 
 async def main():
