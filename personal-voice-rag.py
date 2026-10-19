@@ -34,6 +34,7 @@ import chromadb
 import asyncio
 import os
 
+
 ELEVENLABS_API_KEY = "<KEY>"
 
 # Expose Gradio UI using a public endpoint (Internet)
@@ -205,10 +206,10 @@ def pdf_file_ingestion(file, collection_input):
     """
 
     if not file:
-        return 'Provide a valid file'
+        return "Provide a valid file"
 
     if not collection_input:
-        return 'Provide a collection name'
+        return "Provide a collection name"
 
     # Load the PDF document
     print("[ Loading PDF ]")
@@ -217,7 +218,7 @@ def pdf_file_ingestion(file, collection_input):
     docs = loader.load()
 
     # Split text into manageable chunks
-    print('[ Splitting text into chunks ]')
+    print("[ Splitting text into chunks ]")
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,  # Characters per chunk
         chunk_overlap=200  # Overlap to prevent losing context between chunks
@@ -228,13 +229,13 @@ def pdf_file_ingestion(file, collection_input):
     chunks = [doc for doc in chunks if doc.page_content.strip()]
 
     # Initialize local Ollama Embeddings
-    print('[ Initializing local embeddings ]')
+    print("[ Initializing local embeddings ]")
     embeddings = OllamaEmbeddings(
         model="nomic-embed-text"  # High-performance local embedding model
     )
 
     # Create local Vector store (Chroma) and index the chunks
-    print('[ Indexing chunks into Chroma vector store ]')
+    print("[ Indexing chunks into Chroma vector store ]")
 
     vector_store = Chroma.from_documents(
         documents=chunks,
@@ -245,18 +246,18 @@ def pdf_file_ingestion(file, collection_input):
 
     # Check if file is already indexed in Chroma database
     resp = is_file_already_indexed(vector_store, pdf_file)
-    print('[ File already indexed in vector store? ]', resp)
+    print("[ File already indexed in vector store? ]", resp)
 
     if resp:
-        return 'File successfully ingested'
+        return "File successfully ingested"
     else:
-        return 'Something went wrong'
+        return "Something went wrong"
 
 
 @mcp.tool()
 def query_knowledge_database(query: str, collection: str):
     """
-    Use this tool to perform a semantic similarity search againts the local vector database
+    Use this tool to perform a semantic similarity search against the local vector database
     """
 
     embeddings = OllamaEmbeddings(
