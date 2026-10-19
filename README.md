@@ -43,8 +43,7 @@ It converts text into dense numerical vectors that capture semantic meaning and 
 Chroma database ([ChromaDB](https://www.trychroma.com/products/chromadb)) is an open-source vector store used for storing and retrieving vector embeddings. It supports seamless connectivity with LangChain framework for RAG pipelines.
 
 #### Collections in Chroma database
-Collections allow to logically isolate different sets of documents. They act like individual tables in a relational database. By querying a specific collection rather than the entire database, it is possible to eliminate background noise and irrelevant data.
-At the same time it is possible to achieve much faster query performance.
+Collections allow to logically isolate different sets of documents. They act like individual tables in a relational database. By querying a specific collection rather than the entire database, it is possible to eliminate irrelevant data and achieve much faster query performance.
 
 ### MCP server
 [FastMCP](https://gofastmcp.com/servers/server) is a full framework for building Model Context Protocol (MCP) applications. It exposes Python functions as MCP tools, allows to run a local MCP server and return interactive interfaces directly from tools.
@@ -161,7 +160,6 @@ Windows: %APPDATA%\Claude\claude_desktop_config.json
 Linux: ~/.config/Claude/claude_desktop_config.json
 MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
-You can open config file in Claude Desktop by selecting **Settings** > **Developer** > **Edit config**
 
 **MCP configuration:**
 ```json
@@ -176,6 +174,12 @@ You can open config file in Claude Desktop by selecting **Settings** > **Develop
   }
 }
 ```
+
+You can open config file in Claude Desktop by selecting **Settings** > **Developer** > **Edit config**
+
+![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/collections/docs/claude_desktop_config_01.png)
+
+
 If you successfully configure Claude desktop to access personal voice agent over MCP, you should be able to see active plugin in the 'Connectors'.
 
 ![Claude desktop 1](https://github.com/r0bert-t/personal-voice-rag/blob/feature/collections/docs/claude_desktop_setup_01.png)

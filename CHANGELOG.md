@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.7 - TBU
+## v0.0.7 - 19-10-2026
 
 ### Added or Changed
 - fixed file MacOS permission issues in Claude Desktop integration by migrating from chromadb.Client to chromadb.PersistentClient

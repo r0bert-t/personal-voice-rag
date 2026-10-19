@@ -40,7 +40,7 @@ ELEVENLABS_API_KEY = "<KEY>"
 gradio_public_endpoint = False
 
 # Run MCP server
-mcp_server = True
+mcp_server = False
 
 # Location of the vector database
 current_dir = os.path.dirname(os.path.abspath(__file__))
