@@ -194,6 +194,9 @@ summarize what you find."
 ```
 Claude will automatically invoke the query knowledge database tool, retrieve relevant chunks from vector database, and answer with local context.
 
+It indicates that it will query your local knowledge database through tool invocation UI markers and status messages.
+![Claude desktop query](https://github.com/r0bert-t/personal-voice-rag/blob/feature/collections/docs/claude_desktop_query.png)
+
 
 ## Privacy considerations 
 
