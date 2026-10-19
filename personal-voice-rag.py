@@ -387,8 +387,7 @@ def run_gradio_ui():
                 var_name_mqr = gr.State(value="mq_retriever")
                 checkbox_voice_resp = gr.Checkbox(label="Provide voice response", value=voice_response)
                 checkbox_mqr = gr.Checkbox(label="Enable advanced search using MultiQueryRetriever", value=mq_retriever)
-                checkbox_voice_resp.change(fn=toggle_global_vars, inputs=[var_name_voice, checkbox_voice_resp],
-                                           outputs="")
+                checkbox_voice_resp.change(fn=toggle_global_vars, inputs=[var_name_voice, checkbox_voice_resp], outputs="")
                 checkbox_mqr.change(fn=toggle_global_vars, inputs=[var_name_mqr, checkbox_mqr], outputs="")
                 submit_btn_audio = gr.Button("Get answer")
             with gr.Column():
@@ -438,14 +437,9 @@ def run_gradio_ui():
                     description="Ask me"
                 )
         none_state = gr.State(None)
-        submit_btn_audio.click(fn=transcribe_audio, inputs=[audio_input], outputs=audio_output).then(fn=rag_chain_query,
-                                                                                                     inputs=[
-                                                                                                         audio_output,
-                                                                                                         none_state,
-                                                                                                         collection],
-                                                                                                     outputs=audio_response)
+        submit_btn_audio.click(fn=transcribe_audio, inputs=[audio_input], outputs=audio_output).then(fn=rag_chain_query, inputs=[audio_output,none_state,collection], outputs=audio_response)
         submit_btn_pdf.click(fn=pdf_file_ingestion, inputs=[pdf_file, collection_input], outputs=pdf_response
-                             ).then(
+        ).then(
             fn=refresh_collections_dropdown,
             inputs=None,
             outputs=collection
